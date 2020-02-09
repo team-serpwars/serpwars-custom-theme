@@ -159,3 +159,12 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+
+require_once get_template_directory() . '/inc/class-theme-custom.php';
+
+function SW_Theme_Custom() {
+	// phpc:ignore WordPress.NamingConventions.ValidFunctionName.
+	return SW_Theme_Custom::get_instance();
+}
+
+SW_Theme_Custom();
