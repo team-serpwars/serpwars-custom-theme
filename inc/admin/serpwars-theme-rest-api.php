@@ -1,35 +1,7 @@
 <?php
-class Serpwars_Theme_WXR_Importer extends WP_Importer {
-
-}
-	class Serpwars_Theme_WXR_Import_UI {
-		public function import() {
-			$this->id = wp_unslash( (int) $_REQUEST['id'] );
-			$this->fetch_attachments = true;
-			$importer = $this->get_importer();
-
-		}
-		protected function get_importer() {
-			$importer = new Serpwars_Theme_WXR_Importer( $this->get_import_options() );
-			// $logger = new Customify_Sites_Importer_Logger_ServerSentEvents();
-			$importer->set_logger( $logger );
-			return $importer;
-		}
-		protected function get_import_options() {
-		$options = array(
-			'fetch_attachments' => $this->fetch_attachments,
-			'default_author'    => get_current_user_id(),
-		);
-
-		/**
-		 * Filter the importer options used in the admin UI.
-		 *
-		 * @param array $options Options to pass to Customify_Sites_WXR_Importer::__construct
-		 */
-			return apply_filters( 'wxr_importer.admin.import_options', $options );
-		}
-	}
-
+	require_once("modules/serpwars-theme.exporter.php");
+	require_once("modules/serpwars-theme.import-ui.php");
+	
 	class Serpwars_Theme_Plugin extends TGM_Plugin_Activation{
 		static $instance;
 		public static function get_instance() {
@@ -76,10 +48,10 @@ class Serpwars_Theme_WXR_Importer extends WP_Importer {
 
         	// $this->user_can();
 
-        	$import_ui = new Customify_Sites_WXR_Import_UI();
+        	$import_ui = new Serpwars_Theme_WXR_Import_UI();
         	$import_ui->import();
 
-        	die( 'content_imported' );
+        	// die( 'content_imported' );
     	}
 
 
