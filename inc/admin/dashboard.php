@@ -22,7 +22,8 @@
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'copy_theme_settings' ), 5 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'box_links' ), 10 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'pro_modules_box' ), 15 );
-				add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_plugins' ), 10 );
+				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_plugins' ), 10 );
+				add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_community' ), 25 );
 	
@@ -44,7 +45,10 @@
 				<!-- <img src="<?php echo esc_url( get_template_directory_uri() ) . '/assets/images/admin/sites_thumbnail.jpg'; ?>"> -->
 			</div>
 			<div class="cd-box-content">
-				<p><?php _e( '<strong>Custom Serpwars Theme Sites</strong> is a free add-on for the Custom Serpwars Theme theme which help you browse and import ready made websites with few clicks.', 'serpwars' ); ?></p>
+				<p><?php _e( '<strong>Custom Serpwars Theme Addons</strong> is a free add-on for the Custom Serpwars Theme theme which help you browse and import ready made websites with few clicks.', 'serpwars' ); ?></p>
+
+					<!-- Maybe Just try to integrate the plugin functionality to the theme ? will save us extra clicks -->
+					<
 				<?php
 
 				$plugin_slug = 'serpwars-sites';
@@ -150,6 +154,106 @@
 		</div>
 		<?php
 	}
+	function get_plugin_file( $plugin_slug ) {
+		$installed_plugins = get_plugins();
+		foreach ( (array) $installed_plugins as $plugin_file => $info ) {
+			if ( strpos( $plugin_file, $plugin_slug . '/' ) === 0 ) {
+				return $plugin_file;
+			}
+		}
+		return false;
+	}
+
+	function box_recommend_plugins() {
+		/*
+		 Elementor, CPT UI, Advanced Custom Fields PRO, font-awesome, DynamicConditions,
+		*/
+		$list_plugins = array(
+			'elementor',
+			'custom-post-type-ui',
+			'advanced-custom-fields',
+			'font-awesome',
+			'dynamicconditions',
+		);
+
+		$list_plugins = apply_filters( 'serpwars/recommend-plugins', $list_plugins );
+		$key          = 'serpwars_plugins_info_' . wp_hash( json_encode( $list_plugins ) ); // phpcs:ignore
+		$plugins_info = get_transient( $key );
+		if ( false === $plugins_info ) {
+			$plugins_info = array();
+			if ( ! function_exists( 'plugins_api' ) ) {
+				require_once ABSPATH . '/wp-admin/includes/plugin-install.php';
+			}
+			foreach ( $list_plugins as $slug ) {
+				$info = plugins_api( 'plugin_information', array( 'slug' => $slug ) );
+				if ( ! is_wp_error( $info ) ) {
+					$plugins_info[ $slug ] = $info;
+				}
+			}
+			set_transient( $key, $plugins_info );
+		}
+
+		$html = '';
+		foreach ( $plugins_info as $plugin_slug => $info ) {
+			$status      = is_dir( WP_PLUGIN_DIR . '/' . $plugin_slug );
+			$plugin_file = $this->get_plugin_file( $plugin_slug );
+			if ( ! is_plugin_active( $plugin_file ) ) {
+				$html .= '<div class="cd-list-item">';
+				$html .= '<p class="cd-list-name">' . esc_html( $info->name ) . '</p>';
+				if ( $status ) {
+					$button_class = 'activate-now';
+					$button_txt   = esc_html__( 'Activate', 'serpwars' );
+					$url          = wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . urlencode( $plugin_file ), 'activate-plugin_' . $plugin_file ); // phpcs:ignore
+				} else {
+					$button_class = 'install-now';
+					$button_txt   = esc_html__( 'Install Now', 'serpwars' );
+					$url          = wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'install-plugin',
+								'plugin' => $plugin_slug,
+							),
+							network_admin_url( 'update.php' )
+						),
+						'install-plugin_' . $plugin_slug
+					);
+				}
+
+				$detail_link = add_query_arg(
+					array(
+						'tab'       => 'plugin-information',
+						'plugin'    => $plugin_slug,
+						'TB_iframe' => 'true',
+						'width'     => '772',
+						'height'    => '349',
+					),
+					network_admin_url( 'plugin-install.php' )
+				);
+
+				$class = 'action-btn plugin-card-' . $plugin_slug;
+
+				$html .= '<div class="rcp">';
+				$html .= '<p class="' . esc_attr( $class ) . '"><a href="' . esc_url( $url ) . '" data-slug="' . esc_attr( $plugin_slug ) . '" class="' . esc_attr( $button_class ) . '">' . $button_txt . '</a></p>';
+				$html .= '<a class="plugin-detail thickbox open-plugin-details-modal" href="' . esc_url( $detail_link ) . '">' . esc_html__( 'Details', 'serpwars' ) . '</a>';
+				$html .= '</div>';
+
+				$html .= '</div>';
+			}
+		} // end foreach
+
+		if ( $html ) {
+			?>
+			<div class="cd-box">
+				<div class="cd-box-top"><?php _e( 'Recommend Plugins', 'serpwars' ); ?></div>
+				<div class="cd-box-content cd-list-border">
+					<?php
+						echo $html; // WPCS: XSS OK.
+					?>
+				</div>
+			</div>
+			<?php
+		}
+	}
 
 		function add_menu() {
 			add_theme_page(
@@ -178,7 +282,7 @@
 		}
 		function page() {
 			$this->setup();
-			$this->page_header();
+			// $this->page_header();
 			echo '<div class="wrap">';
 			$cb = apply_filters( 'serpwars/dashboard/content_cb', false );
 			if ( ! is_callable( $cb ) ) {
