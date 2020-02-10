@@ -33,6 +33,7 @@
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_community' ), 25 );
 	
 				add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
+				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  self::$_instance, 'ajax_plugins' ) );
 
 				// add_action( 'admin_init', array( self::$_instance, 'admin_init' ) );
 	
@@ -41,6 +42,16 @@
 	
 			}
 		return self::$_instance;
+		}
+
+		public function ajax_plugins() {
+			// Inputs validations
+			if ( ! check_ajax_referer( 'serpwars_setup_nonce', 'wpnonce' ) || ! isset( $_POST['slug'] ) || empty( $_POST['slug'] ) ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'No Slug Found', 'serpwars' ) ) );
+			}
+        	$request = array();
+        	// send back some json we use to hit up TGM
+        	$plugins = $this->get_plugins();
 		}
 		function box_plugins() {
 
