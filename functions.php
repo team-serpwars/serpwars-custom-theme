@@ -159,7 +159,10 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
-
+if ( ! class_exists( 'WP_Importer' ) ) {
+	defined( 'WP_LOAD_IMPORTERS' ) || define( 'WP_LOAD_IMPORTERS', true );
+	require ABSPATH . '/wp-admin/includes/class-wp-importer.php';
+}
 // locate_template( get_template_directory() . '/inc/modules/lib/class-tgm-plugin-activation.php' , true, true );
 require_once get_template_directory() . '/inc/modules/lib/class-tgm-plugin-activation.php';
 if ( ! function_exists( 'load_tgm_plugin_activation' ) ) {

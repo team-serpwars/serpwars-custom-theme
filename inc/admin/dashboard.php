@@ -42,6 +42,7 @@
 	
 			}
 		return self::$_instance;
+
 		}
 
 		public function ajax_plugins() {
@@ -356,6 +357,7 @@
 		public function page_content() { ?>
 			<div class="required-plugins">
 				<?php $plugins = $this->get_plugins( $plugins_list );?>
+				<?php print_r($plugins);?>
 				<ul class="serpwars-wizard-plugins">
 
 
@@ -399,6 +401,14 @@
         			</div>
         		</div>
 			</div>
+			<script>
+				(function($){
+
+					$.post(ajaxurl,{action:"serpwars_setup_plugins_test"},function(data){
+						console.log(data)
+					})
+				})(jQuery)
+			</script>
 		<?php }
 		public function page_header() {
 		?>

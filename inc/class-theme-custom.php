@@ -52,6 +52,7 @@
 		$files = array(
 			// '/inc/admin/editor.php',  
 			'/inc/admin/hooks-admin.php',  
+			'/inc/admin/serpwars-theme-rest-api.php',  
 			'/inc/admin/dashboard.php',  // Metabox settings.
 		);
 
