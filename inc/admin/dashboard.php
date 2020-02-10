@@ -356,7 +356,7 @@
 		}
 		public function page_content() { ?>
 			<div class="required-plugins">
-				<?php $plugins = $this->get_plugins( $plugins_list );?>
+				<?php $plugins = $this->get_plugins();?>
 				<?php print_r($plugins);?>
 				<ul class="serpwars-wizard-plugins">
 
