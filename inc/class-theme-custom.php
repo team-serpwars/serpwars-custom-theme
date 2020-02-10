@@ -50,7 +50,8 @@
 		}
 
 		$files = array(
-			// '/inc/admin/editor.php',  // Metabox settings.
+			// '/inc/admin/editor.php',  
+			'/inc/admin/hooks-admin.php',  
 			'/inc/admin/dashboard.php',  // Metabox settings.
 		);
 

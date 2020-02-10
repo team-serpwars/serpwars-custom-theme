@@ -160,6 +160,24 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 
+// locate_template( get_template_directory() . '/inc/modules/lib/class-tgm-plugin-activation.php' , true, true );
+require_once get_template_directory() . '/inc/modules/lib/class-tgm-plugin-activation.php';
+if ( ! function_exists( 'load_tgm_plugin_activation' ) ) {
+        /**
+         * Ensure only one instance of the class is ever invoked.
+         *
+         * @since 2.5.0
+         */
+        function load_tgm_plugin_activation() {
+            $GLOBALS['tgmpa'] = TGM_Plugin_Activation::get_instance();
+        }
+    }
+
+	if ( ! class_exists( 'TGM_Plugin_Activation' ) || ! isset( $GLOBALS['tgmpa'] ) ) {
+			die( 'Failed to find TGM' );
+	}
+
+
 require_once get_template_directory() . '/inc/class-theme-custom.php';
 
 function SW_Theme_Custom() {

@@ -6,6 +6,9 @@
 		public $current_tab = '';
 		public $url         = '';
 
+		public $plugins;
+		protected $tgmpa_instance;
+
 
 		static function get_instance() {
 			if ( is_null( self::$_instance ) ) {
@@ -16,18 +19,21 @@
 					self::$_instance->url
 				);
 	
-				self::$_instance->title = __( 'SERPWARS Theme Options', 'serpwars' );
+				self::$_instance->title = __( 'Theme Options', 'serpwars' );
+				self::$_instance->tgmpa_instance 	= call_user_func( array( get_class( $GLOBALS['tgmpa'] ),'get_instance' ) );
+				// add_action( 'init'					, array(  self::$_instance, 'get_tgmpa_instanse' ), 30 );
 				add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 5 );
 				// add_action( 'admin_enqueue_scripts', array( self::$_instance, 'scripts' ) );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'copy_theme_settings' ), 5 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'box_links' ), 10 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'pro_modules_box' ), 15 );
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_plugins' ), 10 );
-				add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
+				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_community' ), 25 );
 	
 				add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
+
 				// add_action( 'admin_init', array( self::$_instance, 'admin_init' ) );
 	
 				// Tabs.
@@ -256,13 +262,48 @@
 	}
 
 		function add_menu() {
-			add_theme_page(
+			add_menu_page(
 				$this->title,
 				$this->title,
 				'manage_options',
 				'serpwars',
-				array( $this, 'page' )
+				array( $this, 'page' ),
+				'',
+				2
 			);
+		}
+		private function get_plugins( $custom_list = array() ) {
+			$plugins  = array(
+			'all'      => array(), // Meaning: all plugins which still have open actions.
+			'install'  => array(),
+			'update'   => array(),
+			'activate' => array(),
+        	);
+
+			foreach ( $this->tgmpa_instance->plugins as $slug => $plugin ) {
+				if( ! empty( $custom_list ) && ! in_array( $slug, $custom_list ) ){
+				// This condition is for custom requests lists
+				continue;
+			} elseif( $this->tgmpa_instance->is_plugin_active( $slug ) && false === $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
+				// No need to display plugins if they are installed, up-to-date and active.
+				continue;
+			} else {
+				$plugins['all'][ $slug ] = $plugin;
+
+				if ( ! $this->tgmpa_instance->is_plugin_installed( $slug ) ) {
+					$plugins['install'][ $slug ] = $plugin;
+				} else {
+
+					if ( false !== $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
+						$plugins['update'][ $slug ] = $plugin;
+					}
+					if ( $this->tgmpa_instance->can_plugin_activate( $slug ) ) {
+						$plugins['activate'][ $slug ] = $plugin;
+					}
+				}
+			}
+			}
+			return $plugins;
 		}
 		function setup() {
 			$theme        = wp_get_theme();
@@ -278,11 +319,17 @@
 				'version'    => $theme->get( 'Version' ),
 			);
 
+			$custom_list = array();
+			self::$_instance->plugins = $this->get_plugins( $custom_list );
+
 			$this->current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : ''; // phpcs:ignore
+
+
 		}
 		function page() {
 			$this->setup();
-			// $this->page_header();
+			$this->page_header();
+			$this->page_content();
 			echo '<div class="wrap">';
 			$cb = apply_filters( 'serpwars/dashboard/content_cb', false );
 			if ( ! is_callable( $cb ) ) {
@@ -295,21 +342,80 @@
 	
 			echo '</div>';
 		}
+		public function page_content() { ?>
+			<div class="required-plugins">
+				<?php $plugins = $this->get_plugins( $plugins_list );?>
+				<ul class="serpwars-wizard-plugins">
+
+
+					<?php	foreach ( $plugins['all'] as $slug => $plugin ) { ?>
+						<li class="serpwars-plugin" data-slug="<?php echo esc_attr( $slug ); ?>">
+							<label class="serpwars-control serpwars-checkbox">
+								<?php echo esc_html( $plugin['name'] ); ?>
+								<input name="plugin[]" value="<?php echo esc_attr($slug); ?>" type="checkbox" checked>
+								<div class="serpwars-indicator"></div>
+							</label>
+							<div class="status column-status">
+							<?php
+							    $keys = $class = '';
+							    if ( isset( $plugins['install'][ $slug ] ) ) {
+								    $keys 	= esc_html__( 'Ready to install', 'serpwars' );
+								    $class  = 'install';
+							    }
+							    if ( isset( $plugins['activate'][ $slug ] ) ) {
+								    $keys 	= esc_html__( 'Not activated', 'serpwars' );
+								    $class  = 'activate';
+							    }
+							    if ( isset( $plugins['update'][ $slug ] ) ) {
+								    $keys 	= esc_html__( 'Ready to update', 'serpwars' );
+								    $class  = 'update';
+							    }
+						    ?>
+								<span class="<?php echo $class ?>">
+									<?php echo $keys; ?>
+								</span>
+								<div class="spinner"></div>
+				            </div>
+						</li>
+					<?php } ?>
+				</ul>
+				<div class="serpwars-sticky">
+        			<div class="serpwars-setup-actions step">
+        				<a href="#"
+        				   class="serpwars-button serpwars-primary install-plugins disabled"
+        				   data-callback="install_plugins"><?php esc_html_e( 'Install Plugins', 'serpwars' ); ?></a>
+        				<?php wp_nonce_field( 'serpwars-setup' ); ?>
+        			</div>
+        		</div>
+			</div>
+		<?php }
 		public function page_header() {
 		?>
 		<div class="cd-header">
 			<div class="cd-row">
 				<div class="cd-header-inner">
-					<a href="https://pressmaximum.com" target="_blank" class="cd-branding">
-						<img src="<?php echo esc_url( get_template_directory_uri() ) . '/assets/images/admin/serpwars_logo@2x.png'; ?>" alt="<?php esc_attr_e( 'logo', 'serpwars' ); ?>">
-					</a>
+					<?php $welcome_page_title = sprintf( __( 'Welcome to %s', 'serpwars' ) . '</strong>',  '<strong>'. $this->config['name']); ?>
+					<h1 class="cd-header-title"><?php echo wp_kses( $welcome_page_title, array(
+                		'br' => array(),
+                		'em' => array(),
+                		'strong' => array(),
+            		) ); ?></h1>
+					
 					<span class="cd-version"><?php echo esc_html( $this->config['version'] ); ?></span>
-					<a class="cd-top-link" href="<?php echo esc_url( $this->add_url_args( array( 'tab' => 'changelog' ) ) ); ?>"><?php _e( 'Changelog', 'serpwars' ); ?></a>
+				
+
 				</div>
 			</div>
 		</div>
+		<div class="serpwars-setup-content"> 
+            	<div class="serpwars-section-content-box"> 
+            		<h3 class="serpwars-content-title"><?php _e('Recommended Plugins', 'serpwars' ); ?></h3>
+            		 <p style="margin-bottom:0;"><?php echo sprintf( esc_html__( 'The following is a list of best integrated plugins for %s , you can install them from here and add or remove them later on WordPress plugins page.', 'serpwars' ), $this->config['name'] );?></p> 
+            	</div> 
+            </div> 
 		<?php
 		}
+	
 
 			private function page_inner() {
 		?>
