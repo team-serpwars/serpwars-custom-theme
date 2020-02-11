@@ -4,12 +4,59 @@
 
 	var  _ajaxData = {};
 	var currentItemHash,_ajaxUrl,_attemptsBuffer,_attemptsBuffer;
-	var slug = "elementor"
-	var plugins = ['elementor','custom-post-type-ui','advanced-custom-fields','font-awesome','dynamicconditions'];
+	var currentIndex=0;
+	var slug = "elementor"	
+
+	var pluginsList = [
+		{
+			slug:'elementor',
+			isChecked:true,
+			isDone:false,
+			inProgress:false,
+		},
+		{
+			slug:'custom-post-type-ui',
+			isChecked:true,
+			isDone:false,
+			inProgress:false,
+		},
+		{
+			slug:'advanced-custom-fields',
+			isChecked:true,
+			isDone:false,
+			inProgress:false,
+		},
+		{
+			slug:'font-awesome',
+			isChecked:true,
+			isDone:false,
+			inProgress:false,
+		},
+		{
+			slug:'dynamicconditions',
+			isChecked:true,
+			isDone:false,
+			inProgress:false,
+		}
+	];
+
+	var plugins = pluginsList.map(function(e){return e.slug});
+	var _currentItem = null;
+
+	for(var i in pluginsList){
+		if(pluginsList[i].isChecked==true && !pluginsList[i].isDone &&  _currentItem == null){
+			_currentItem = pluginsList[i].slug;
+		}
+	}
+
+
+
+	console.log(_currentItem);
 
 	var _globalAJAX= function(callback) {
             // Do Ajax & update default value
 
+    		console.log(_ajaxUrl)
             $.ajax({
                 url: aux_setup_params.ajaxurl,
                 type: "post",
@@ -17,14 +64,14 @@
             }).done(callback);
        }
 
-    var _installPlugin= function(slug) {
-
-    	console.log(aux_setup_params.wpnonce);
-            if (slug) {                
+    var _installPlugin= function() {
+    	var plugins = pluginsList.map(function(e){ if (e.ischecked) return e.slug });
+    	console.log("installing "+_currentItem);
+            if (_currentItem) {                
                 _ajaxData = {
                     action: "serpwars_setup_plugins",
                     wpnonce: aux_setup_params.wpnonce,
-                    slug: slug,
+                    slug: _currentItem,
                     plugins: plugins
                 };
                 
@@ -37,49 +84,57 @@
         }
 
     var _pluginActions = function(response) {
-            // Check response type
+
             if (typeof response === "object" && response.success) {
                 // Update plugin status message
-              
-
-                console.log(response)
+                
                 // At this point, if the response contains the url, it means that we need to install/activate it.
                 if (typeof response.data.url !== "undefined") {
-                    	console.log("Then What ?")
+
                     if (currentItemHash == response.data.hash) {
-                    	console.log("Done 0")
-                        // $currentNode
-                        //     .data("done_item", 0)
-                        //     .find(".column-status span")
-                        //     .text("failed");
+                        console.log("Failed")
                         currentItemHash = null;
                         _installPlugin();
                     } else {
                         // we have an ajax url action to perform.
-
                         _ajaxUrl = response.data.url;
-                        console.log(response.data.url)
                         _ajaxData = response.data;
                         currentItemHash = response.data.hash;
 
-                        console.log(currentItemHash)
-                        $.ajax({
-                url: _ajaxUrl,
-                type: "post",
-                data: _ajaxData
-            }).done(_installPlugin);
-                        // _globalAJAX(
-                        //     function(html) {
-                        //         // Reset ajax url to default admin ajax value
-                        //         _ajaxUrl = aux_setup_params.ajaxurl;
-                        //         _installPlugin();
-                        //     }
-                        // );
+                        if(response.data.url){
+                        	$.ajax({
+            				    url: response.data.url,
+            				    type: "post",
+            				    data: _ajaxData
+            				}).done(function(html) {
+                                // Reset ajax url to default admin ajax value
+                                _ajaxUrl = aux_setup_params.ajaxurl;
+                                _installPlugin();
+                            });
+
+                        }else{
+
+                        _globalAJAX(
+                            function(html) {
+                                // Reset ajax url to default admin ajax value
+                                _ajaxUrl = aux_setup_params.ajaxurl;
+                                _installPlugin();
+                            }
+                        );
+                        }
                     }
                 } else {
                     // otherwise it's just installed and we should make a notify to user
-                                console.log("Check")
-                   
+                    // update isChecked
+                     pluginsList.forEach(function(e){ 
+                     	if(e.slug==_currentItem){
+                     		// e.isChecked = false;
+                     		e.isDone = true;
+                     		currentIndex+=1;
+
+                     	}
+                     });
+                    console.log(_currentItem + " Is Already Installed")
                     // Then jump to next plugin
                     _processPlugins();
                 }
@@ -89,8 +144,7 @@
                     // Reset buffer value
                     _attemptsBuffer = 0;
                     // error & try again with next plugin
-                    console.log("Error")
-                   
+                    console.log("AJAX Error")
                     _processPlugins();
                 } else {
                     // Try again & update buffer value
@@ -99,6 +153,41 @@
                     _installPlugin();
                 }
             }
+        }
+
+       var _processPlugins = function() {
+            var doNext = false,
+                $pluginsList =  pluginsList.map(function(e){ if(e.ischecked) return  e;});
+
+                console.log(_currentItem);
+
+            var done_counter = 0;
+            // Scroll on each progress in modal view
+            
+
+            pluginsList.forEach(function(item) {
+                if (_currentItem == null || doNext) {
+                    if (item.isChecked) {
+                    	item.inProgress = true
+                        _currentItem = item.slug;
+                        _installPlugin();
+                        doNext = false;
+                    }
+                } else if (item.slug === _currentItem) {
+                    item.inProgress = false;
+                    doNext = true;
+
+                }
+            });
+            pluginsList.forEach(function(item) {
+                if (item.isChecked && item.isDone) {
+                	done_counter+=1
+                }
+            });
+
+            if(done_counter == $pluginsList.length){
+            	console.log("All Items were installed")
+            }          
         }
 
 
@@ -110,7 +199,7 @@
 		// 		console.log(data)
 		// })		
 
-		_installPlugin('elementor');
+		_installPlugin();
 	})
 					
 					
