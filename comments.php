@@ -1,75 +1,57 @@
 <?php
 /**
- * The template for displaying comments
+ * The template for displaying comments.
  *
  * This is the template that displays the area of the page that contains both the current comments
  * and the comment form.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package Serpwars_Theme
  */
 
-/*
- * If the current post is protected by a password and
- * the visitor has not yet entered the password we will
- * return early without loading the comments.
- */
-if ( post_password_required() ) {
-	return;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+// Comment Reply Script
+if ( comments_open() && get_option( 'thread_comments' ) ) {
+	wp_enqueue_script( 'comment-reply' );
 }
 ?>
+<section id="comments" class="comments-area">
 
-<div id="comments" class="comments-area">
+	<?php if ( have_comments() ) : ?>
+		<h3 class="title-comments">
+			<span>
+				<?php printf( _n( 'One Response', '%1$s Responses', get_comments_number(), 'elementor-hello-theme' ), number_format_i18n( get_comments_number() ), get_the_title() ); ?>
+			</span>
+		</h3>
 
-	<?php
-	// You can start editing here -- including this comment!
-	if ( have_comments() ) :
-		?>
-		<h2 class="comments-title">
-			<?php
-			$serpwars_custom_theme_comment_count = get_comments_number();
-			if ( '1' === $serpwars_custom_theme_comment_count ) {
-				printf(
-					/* translators: 1: title. */
-					esc_html__( 'One thought on &ldquo;%1$s&rdquo;', 'serpwars-custom-theme' ),
-					'<span>' . get_the_title() . '</span>'
-				);
-			} else {
-				printf( // WPCS: XSS OK.
-					/* translators: 1: comment count number, 2: title. */
-					esc_html( _nx( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $serpwars_custom_theme_comment_count, 'comments title', 'serpwars-custom-theme' ) ),
-					number_format_i18n( $serpwars_custom_theme_comment_count ),
-					'<span>' . get_the_title() . '</span>'
-				);
-			}
-			?>
-		</h2><!-- .comments-title -->
+	<?php the_comments_navigation(); ?>
 
-		<?php the_comments_navigation(); ?>
-
-		<ol class="comment-list">
-			<?php
-			wp_list_comments( array(
-				'style'      => 'ol',
-				'short_ping' => true,
-			) );
-			?>
-		</ol><!-- .comment-list -->
-
+	<ol class="comment-list">
 		<?php
-		the_comments_navigation();
+		wp_list_comments( array(
+			'style'       => 'ol',
+			'short_ping'  => true,
+			'avatar_size' => 42,
+		) );
+		?>
+	</ol><!-- .comment-list -->
 
-		// If comments are closed and there are comments, let's leave a little note, shall we?
-		if ( ! comments_open() ) :
-			?>
-			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'serpwars-custom-theme' ); ?></p>
-			<?php
-		endif;
+	<?php the_comments_navigation(); ?>
 
-	endif; // Check for have_comments().
+<?php endif; // Check for have_comments(). ?>
 
-	comment_form();
+<?php
+// If comments are closed and there are comments, let's leave a little note, shall we?
+if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
+	<p class="no-comments"><?php _e( 'Comments are closed.', 'elementor-hello-theme' ); ?></p>
+<?php endif; ?>
 
-</div><!-- #comments -->
+<?php
+comment_form( array(
+	'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
+	'title_reply_after'  => '</h2>',
+) );
+?>
+
+</section><!-- .comments-area -->

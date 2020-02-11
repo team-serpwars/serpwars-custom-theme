@@ -1,47 +1,76 @@
-[![Build Status](https://travis-ci.org/Automattic/_s.svg?branch=master)](https://travis-ci.org/Automattic/_s)
+# Elementor Hello Theme [![Built with Grunt](https://cdn.gruntjs.com/builtwith.svg)](http://gruntjs.com/)
 
-_s
-===
 
-Hi. I'm a starter theme called `_s`, or `underscores`, if you like. I'm a theme meant for hacking so don't use me as a Parent Theme. Instead try turning me into the next, most awesome, WordPress theme out there. That's what I'm here for.
 
-My ultra-minimal CSS might make me look like theme tartare but that means less stuff to get in your way when you're designing your awesome theme. Here are some of the other more interesting things you'll find here:
+**Contributors:** [elemntor](https://profiles.wordpress.org/elemntor)  
+**Requires at least:** WordPress 4.7  
+**Tested up to:** WordPress 5.0  
+**Stable tag:** 1.1.0  
+**Version:** 1.1.0  
+**License:** GNU General Public License v3 or later  
+**License URI:** https://www.gnu.org/licenses/gpl-3.0.html  
+**Tags:** flexible-header, accessibility-ready, custom-colors, custom-menu, custom-logo, editor-style, featured-images, rtl-language-support, threaded-comments, translation-ready  
 
-* A just right amount of lean, well-commented, modern, HTML5 templates.
-* A helpful 404 template.
-* A custom header implementation in `inc/custom-header.php` just add the code snippet found in the comments of `inc/custom-header.php` to your `header.php` template.
-* Custom template tags in `inc/template-tags.php` that keep your templates clean and neat and prevent code duplication.
-* Some small tweaks in `inc/template-functions.php` that can improve your theming experience.
-* A script at `js/navigation.js` that makes your menu a toggled dropdown on small screens (like your phone), ready for CSS artistry. It's enqueued in `functions.php`.
-* 2 sample CSS layouts in `layouts/` for a sidebar on either side of your content.
-Note: `.no-sidebar` styles are not automatically loaded.
-* Smartly organized starter CSS in `style.css` that will help you to quickly get your design off the ground.
-* Full support for `WooCommerce plugin` integration with hooks in `inc/woocommerce.php`, styling override woocommerce.css with product gallery features (zoom, swipe, lightbox) enabled.
-* Licensed under GPLv2 or later. :) Use it to make something cool.
+The theme for Elementor plugin.
 
-Getting Started
----------------
+## Description ##
 
-If you want to keep it simple, head over to https://underscores.me and generate your `_s` based theme from there. You just input the name of the theme you want to create, click the "Generate" button, and you get your ready-to-awesomize starter theme.
+A plain-vanilla theme, best suited for building your site using Elementor plugin.
+This theme resets the environment and prepares it for smooth operation of Elementor.
 
-If you want to set things up manually, download `_s` from GitHub. The first thing you want to do is copy the `_s` directory and change the name to something else (like, say, `megatherium-is-awesome`), and then you'll need to do a five-step find and replace on the name in all the templates.
+If you wish to customize your theme & site, just use **Elementor!**.
 
-1. Search for `'_s'` (inside single quotations) to capture the text domain.
-2. Search for `_s_` to capture all the function names.
-3. Search for `Text Domain: _s` in `style.css`.
-4. Search for <code>&nbsp;_s</code> (with a space before it) to capture DocBlocks.
-5. Search for `_s-` to capture prefixed handles.
+### Hooks ###
 
-OR
+to prevent the loading of any of the following settings, add the following code to your child-theme functions.php:
 
-1. Search for: `'_s'` and replace with: `'megatherium-is-awesome'`.
-2. Search for: `_s_` and replace with: `megatherium_is_awesome_`.
-3. Search for: `Text Domain: _s` and replace with: `Text Domain: megatherium-is-awesome` in `style.css`.
-4. Search for: <code>&nbsp;_s</code> and replace with: <code>&nbsp;Megatherium_is_Awesome</code>.
-5. Search for: `_s-` and replace with: `megatherium-is-awesome-`.
+`add_filter( 'choose-from-the-list-below', '__return_false' );`
 
-Then, update the stylesheet header in `style.css`, the links in `footer.php` with your own information and rename `_s.pot` from `languages` folder to use the theme's slug. Next, update or delete this readme.
+* `elementor_hello_theme_load_textdomain`               load theme's textdomain
+* `elementor_hello_theme_register_menus`                register the theme's default menu location
+* `elementor_hello_theme_add_theme_support`             register the various supported features
+* `elementor_hello_theme_add_woocommerce_support`       register woocommerce features, including product-gallery zoom, swipe & lightbox features
+* `elementor_hello_theme_enqueue_style`                 enqueue style
+* `elementor_hello_theme_register_elementor_locations`  register elementor settings
 
-Now you're ready to go! The next step is easy to say, but harder to do: make an awesome WordPress theme. :)
+### Style ###
 
-Good luck!
+In order to change the styling used throughout the site, use **Elementor**.
+
+However, if for some reason there is still a need to add or change the site's css, please take into account the following:
+1. files located under `reset` directory, should **NOT** be edited directly.
+2. in order to change any of the values defined in `preset/variables.scss`, add your style code to `custom/pre_default.scss`.
+3. any new scss files should be located under `custom/` directory, and imported in `custom/custom.scss`.
+
+## Installation ##
+
+1. In your admin panel, go to Appearance > Themes and click the 'Add New' button.
+2. Type in 'Elementor Hello' in the search form and hit the 'Enter' key on your keyboard.
+3. Click on the 'Activate' button to use your new theme right away.
+4. Navigate to Elementor and start building your site.
+
+## Frequently Asked Questions ##
+
+**Does this theme support any plugins?**
+
+Elementor Hello includes support for WooCommerce.
+
+**Can Font Style be added thru the theme's css file?**
+
+Best practice is to use the styling capabilities in the Elementor plugin.
+
+## Changelog ##
+
+### 1.0 - 2018-11-04 ###
+* Initial release
+
+### 1.1.0 - 2018-12-26 ###
+* New: use scss & do thorough style reset.
+* New: readme.
+* New: add hooks and child-theme preparations.
+* New: template parts search.
+* New: translations support.
+* Changed: re-write of already existing template parts.
+
+### 1.1.1 - 2019-01-28 ###
+* Tweak: remove lists padding reset.

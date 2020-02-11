@@ -1,38 +1,74 @@
-=== Serpwars Theme ===
+=== Elementor Hello Theme ===
 
-Contributors: automattic
-Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Contributors: elemntor
+Requires at least: WordPress 4.7
+Tested up to: WordPress 5.0
+Stable tag: 1.1.0
+Version: 1.1.0
+License: GNU General Public License v3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Tags: flexible-header, accessibility-ready, custom-colors, custom-menu, custom-logo, editor-style, featured-images, rtl-language-support, threaded-comments, translation-ready
 
-Requires at least: 4.5
-Tested up to: 4.8
-Stable tag: 1.0.0
-License: GNU General Public License v2 or later
-License URI: LICENSE
-
-A starter theme called Serpwars Theme.
+The theme for Elementor plugin.
 
 == Description ==
 
-Description
+A plain-vanilla theme, best suited for building your site using Elementor plugin.
+This theme resets the environment and prepares it for smooth operation of Elementor.
+
+If you wish to customize your theme & site, just use **Elementor!**.
+
+= Hooks =
+
+to prevent the loading of any of the following settings, add the following code to your child-theme functions.php:
+
+`add_filter( 'choose-from-the-list-below', '__return_false' );`
+
+* `elementor_hello_theme_load_textdomain`               load theme's textdomain
+* `elementor_hello_theme_register_menus`                register the theme's default menu location
+* `elementor_hello_theme_add_theme_support`             register the various supported features
+* `elementor_hello_theme_add_woocommerce_support`       register woocommerce features, including product-gallery zoom, swipe & lightbox features
+* `elementor_hello_theme_enqueue_style`                 enqueue style
+* `elementor_hello_theme_register_elementor_locations`  register elementor settings
+
+= Style =
+
+In order to change the styling used throughout the site, use **Elementor**.
+
+However, if for some reason there is still a need to add or change the site's css, please take into account the following:
+1. files located under `reset` directory, should **NOT** be edited directly.
+2. in order to change any of the values defined in `preset/variables.scss`, add your style code to `custom/pre_default.scss`.
+3. any new scss files should be located under `custom/` directory, and imported in `custom/custom.scss`.
 
 == Installation ==
 
-1. In your admin panel, go to Appearance > Themes and click the Add New button.
-2. Click Upload Theme and Choose File, then select the theme's .zip file. Click Install Now.
-3. Click Activate to use your new theme right away.
+1. In your admin panel, go to Appearance > Themes and click the 'Add New' button.
+2. Type in 'Elementor Hello' in the search form and hit the 'Enter' key on your keyboard.
+3. Click on the 'Activate' button to use your new theme right away.
+4. Navigate to Elementor and start building your site.
 
 == Frequently Asked Questions ==
 
-= Does this theme support any plugins? =
+**Does this theme support any plugins?**
 
-Serpwars Theme includes support for Infinite Scroll in Jetpack.
+Elementor Hello includes support for WooCommerce.
+
+**Can Font Style be added thru the theme's css file?**
+
+Best practice is to use the styling capabilities in the Elementor plugin.
 
 == Changelog ==
 
-= 1.0 - May 12 2015 =
+= 1.0 - 2018-11-04 =
 * Initial release
 
-== Credits ==
+= 1.1.0 - 2018-12-26 =
+* New: use scss & do thorough style reset.
+* New: readme.
+* New: add hooks and child-theme preparations.
+* New: template parts search.
+* New: translations support.
+* Changed: re-write of already existing template parts.
 
-* Based on Underscores https://underscores.me/, (C) 2012-2017 Automattic, Inc., [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
-* normalize.css https://necolas.github.io/normalize.css/, (C) 2012-2016 Nicolas Gallagher and Jonathan Neal, [MIT](https://opensource.org/licenses/MIT)
+= 1.1.1 - 2019-01-28 =
+* Tweak: remove lists padding reset.

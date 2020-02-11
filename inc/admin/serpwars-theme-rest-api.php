@@ -46,6 +46,9 @@
             add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
+
+
+
             if ( class_exists( 'TGM_Plugin_Activation' ) && isset( $GLOBALS['tgmpa'] ) ) {
 				add_action( 'init'					, array( $this, 'get_tgmpa_instanse' ), 30 );
 				add_action( 'init'					, array( $this, 'set_tgmpa_url' ), 40 );

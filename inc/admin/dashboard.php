@@ -423,9 +423,13 @@
 				<div class="serpwars-sticky">
         			<div class="serpwars-setup-actions step">
         				<a href="#"
-        				   class="serpwars-button serpwars-primary install-plugins disabled"
+        				   class="serpwars-button serpwars-primary install-plugins "
         				   data-callback="install_plugins"><?php esc_html_e( 'Install Plugins', 'serpwars' ); ?></a>
         				<?php wp_nonce_field( 'serpwars-setup' ); ?>
+
+        				<a href="#"
+        				   class="serpwars-button serpwars-primary demo-importer "
+        				   data-callback="demo_iporter"><?php esc_html_e( 'Import Demo Data', 'serpwars' ); ?></a>
         			</div>
         		</div>
 			</div>
