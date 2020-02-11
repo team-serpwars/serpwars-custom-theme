@@ -16,7 +16,7 @@ class Serpwars_Theme_Ajax {
 
         // // Import Content
         // add_action( 'wp_ajax_cs_import__check', array( $this, 'ajax_import__check' ) );
-        // add_action( 'wp_ajax_cs_import_content', array( $this, 'ajax_import_content' ) );
+        add_action( 'wp_ajax_nopriv_cs_import_content', array( $this, 'ajax_import_content' ) );
         // add_action( 'wp_ajax_cs_import_options', array( $this, 'ajax_import_options' ) );
 
         // Download files
@@ -35,6 +35,22 @@ class Serpwars_Theme_Ajax {
         	}
     	}
 
+    	function ajax_import_content(){
+
+        	// $this->user_can();
+
+        	$import_ui = new Serpwars_Theme_WXR_Import_UI();
+
+        	// print_r($import_ui );
+        	$import_ui->import();
+
+        	die( 'content_imported' );
+    	}
+
+    	//ajax_import__check
+    	// action=cs_import_options&id=6&xml_id=5
+    	//action: elementor_reset_library
+    	// elementor_clear_cache
 
     function ajax_download_files_test(){
     	wp_send_json(json_decode('{"xml_id":5,"json_id":6,"summary":{"post_count":40,"media_count":2,"user_count":2,"term_count":10,"comment_count":4,"users":[{"data":{"ID":"1","user_login":"wpengine","user_email":"bitbucket@wpengine.com","display_name":"wpengine","first_name":"","last_name":""},"meta":[]},{"data":{"ID":"2","user_login":"customifysites","user_email":"no-reply@customifysites.com","display_name":"customifysites","first_name":"","last_name":""},"meta":[]}],"home":"https:\/\/customifysites.com\/consulting","siteurl":"http:\/\/customifysites.com\/","title":"Consulting","generator":"https:\/\/wordpress.org\/?v=4.9.8","version":"1.2"},"texts":{"post_count":"40 posts (including CPTs)","media_count":"2 media items","user_count":"2 users","term_count":"10 terms","comment_count":"4 comments"},"_recommend_plugins":{"breadcrumb-navxt":"Breadcrumb NavXT","custom-sidebars":"Custom Sidebars","elementor":"Elementor","wpforms-lite":"WPForms Lite"}}'));

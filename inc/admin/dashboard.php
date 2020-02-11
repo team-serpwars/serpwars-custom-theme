@@ -1,4 +1,5 @@
 <?php
+	require_once("serpwars-theme-rest-api.php");
 	class SW_Theme_Custom_Dashboard{
 		static $_instance;
 		public $title;
@@ -23,7 +24,9 @@
 				self::$_instance->tgmpa_instance 	= call_user_func( array( get_class( $GLOBALS['tgmpa'] ),'get_instance' ) );
 				// add_action( 'init'					, array(  self::$_instance, 'get_tgmpa_instanse' ), 30 );
 				add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 5 );
-				// add_action( 'admin_enqueue_scripts', array( self::$_instance, 'scripts' ) );
+				 add_action( 'admin_enqueue_scripts',array(self::$_instance ,'scripts' )  );
+
+				
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'copy_theme_settings' ), 5 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'box_links' ), 10 );
 				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'pro_modules_box' ), 15 );
@@ -33,7 +36,8 @@
 				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_community' ), 25 );
 	
 				add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
-				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  self::$_instance, 'ajax_plugins' ) );
+				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
+				add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 
 				// add_action( 'admin_init', array( self::$_instance, 'admin_init' ) );
 	
@@ -44,12 +48,34 @@
 		return self::$_instance;
 
 		}
+		 function scripts(){
+ 			wp_enqueue_script( 'custom-plugin', get_template_directory_uri() . '/inc/plugins.js' ,array('jquery'),false,true);
 
+ 			 wp_localize_script( 'custom-plugin', 'aux_setup_params', array(
+            'tgm_plugin_nonce' => array(
+                'update'  => wp_create_nonce( 'tgmpa-update' ),
+                'install' => wp_create_nonce( 'tgmpa-install' ),
+            ),
+            'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+            'wpnonce'          => wp_create_nonce( 'aux_setup_nonce' ),
+            'imported_done'    => esc_html__( 'This demo has been successfully imported.', 'auxin-elements' ),
+            'imported_fail'    => esc_html__( 'Whoops! There was a problem in demo importing.', 'auxin-elements' ),
+            'progress_text'    => esc_html__( 'Processing: Download', 'auxin-elements' ),
+            'nextstep_text'    => esc_html__( 'Continue', 'auxin-elements' ),
+            'activate_text'    => esc_html__( 'Install Plugins', 'auxin-elements' ),
+            'makedemo_text'    => esc_html__( 'Import Content', 'auxin-elements' ),
+            'btnworks_text'    => esc_html__( 'Installing...', 'auxin-elements' ),
+            'onbefore_text'    => esc_html__( 'Please do not refresh or leave the page during the wizard\'s process.', 'auxin-elements' ),
+            'svg_loader'       => '<svg width="90" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#505050"><circle cx="10" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="50" cy="10" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;10;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="90" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg>'
+        ) );
+
+		}
+		
 		public function ajax_plugins() {
 			// Inputs validations
-			if ( ! check_ajax_referer( 'serpwars_setup_nonce', 'wpnonce' ) || ! isset( $_POST['slug'] ) || empty( $_POST['slug'] ) ) {
-				wp_send_json_error( array( 'message' => esc_html__( 'No Slug Found', 'serpwars' ) ) );
-			}
+			// if ( ! check_ajax_referer( 'serpwars_setup_nonce', 'wpnonce' ) || ! isset( $_POST['slug'] ) || empty( $_POST['slug'] ) ) {
+			// 	wp_send_json_error( array( 'message' => esc_html__( 'No Slug Found', 'serpwars' ) ) );
+			// }
         	$request = array();
         	// send back some json we use to hit up TGM
         	$plugins = $this->get_plugins();
@@ -154,6 +180,8 @@
 					jQuery( document ).ready( function($){
 						var  sites_url = <?php echo json_encode( $sites_url ); // phpcs:ignore ?>;
 						var  view_sites = <?php echo json_encode( $view_site_txt ); // phpcs:ignore ?>;
+						
+
 						$( '#plugin-filter .box-plugins' ).on( 'click', '.activate-now', function( e ){
 							e.preventDefault();
 							var button = $( this );
@@ -357,7 +385,7 @@
 		public function page_content() { ?>
 			<div class="required-plugins">
 				<?php $plugins = $this->get_plugins();?>
-				<?php print_r($plugins);?>
+			
 				<ul class="serpwars-wizard-plugins">
 
 
@@ -401,14 +429,7 @@
         			</div>
         		</div>
 			</div>
-			<script>
-				(function($){
-
-					$.post(ajaxurl,{action:"serpwars_setup_plugins_test"},function(data){
-						console.log(data)
-					})
-				})(jQuery)
-			</script>
+			
 		<?php }
 		public function page_header() {
 		?>

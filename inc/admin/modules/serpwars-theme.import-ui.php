@@ -1,9 +1,6 @@
 <?php
 	require_once("serpwars-theme.importer.logger.server-events.php");
 	class Serpwars_Theme_WXR_Import_UI {
-		public $mapping = array();
-		protected $requires_remapping = array();
-		protected $exists = array();
 
 
 		public function __construct( $options = array() ) {
@@ -13,23 +10,6 @@
 			'term'    => array(),
 			'user'    => array(),
 			);
-
-			$this->mapping = $empty_types;
-			$this->mapping['user_slug'] = array();
-			$this->mapping['term_id'] = array();
-			$this->requires_remapping = $empty_types;
-			$this->exists = $empty_types;
-
-			$this->options = wp_parse_args( $options, array(
-				'prefill_existing_posts'    => true,
-				'prefill_existing_comments' => true,
-				'prefill_existing_terms'    => true,
-				'update_attachment_guids'   => false,
-				'fetch_attachments'         => false,
-				'aggressive_url_search'     => false,
-				'default_author'            => null,
-			) );
-
 		}
 		public function import() {
 			$this->id = wp_unslash( (int) $_REQUEST['id'] );
@@ -41,21 +21,23 @@
 			// 	add_filter( 'wxr_importer.pre_process.user', '__return_null' );
 			// }
 			add_action( 'wxr_importer.processed.post', array( $this, 'imported_post' ), 10, 2 );
-			// add_action( 'wxr_importer.process_failed.post', array( $this, 'imported_post' ), 10, 2 );
-			// add_action( 'wxr_importer.process_already_imported.post', array( $this, 'already_imported_post' ), 10, 2 );
-			// add_action( 'wxr_importer.process_skipped.post', array( $this, 'already_imported_post' ), 10, 2 );
-			// add_action( 'wxr_importer.processed.comment', array( $this, 'imported_comment' ) );
-			// add_action( 'wxr_importer.process_already_imported.comment', array( $this, 'imported_comment' ) );
-			// add_action( 'wxr_importer.processed.term', array( $this, 'imported_term' ) );
-			// add_action( 'wxr_importer.process_failed.term', array( $this, 'imported_term' ) );
-			// add_action( 'wxr_importer.process_already_imported.term', array( $this, 'imported_term' ) );
-			// add_action( 'wxr_importer.processed.user', array( $this, 'imported_user' ) );
-			// add_action( 'wxr_importer.process_failed.user', array( $this, 'imported_user' ) );
+			add_action( 'wxr_importer.process_failed.post', array( $this, 'imported_post' ), 10, 2 );
+			add_action( 'wxr_importer.process_already_imported.post', array( $this, 'already_imported_post' ), 10, 2 );
+			add_action( 'wxr_importer.process_skipped.post', array( $this, 'already_imported_post' ), 10, 2 );
+			add_action( 'wxr_importer.processed.comment', array( $this, 'imported_comment' ) );
+			add_action( 'wxr_importer.process_already_imported.comment', array( $this, 'imported_comment' ) );
+			add_action( 'wxr_importer.processed.term', array( $this, 'imported_term' ) );
+			add_action( 'wxr_importer.process_failed.term', array( $this, 'imported_term' ) );
+			add_action( 'wxr_importer.process_already_imported.term', array( $this, 'imported_term' ) );
+			add_action( 'wxr_importer.processed.user', array( $this, 'imported_user' ) );
+			add_action( 'wxr_importer.process_failed.user', array( $this, 'imported_user' ) );
 
 
 			//Track ID
-			print_r($this->id);
-			// $file = get_attached_file( $this->id );
+
+			$file = get_attached_file( $this->id );
+
+			print_r($importer );
 			die();
 
 		}
