@@ -59,31 +59,93 @@
                 wp_send_json_error( array( 'message' => __( 'Error in getting data!', 'serpwars' ) ) );
             }
 
+            if(isset($data['elementor_templates'])){
+                // $this->import_elementor_data($data['elementor_templates']);
+            }
+            if(isset($data['cptui'])){
+                $cptdata = get_option( 'cptui_post_types', false );
+
+                $cptdata = ($cptdata) ? $cptdata : array();
+
+
+                foreach ($data['cptui'] as $i=>$item) {
+                     $cptdata[$item['name']] = $item;
+                }
+                update_option('cptui_post_types',$cptdata,true);
+                echo "CPT UI Options Imported";
+            }
             $options = get_option( 'serpwars_demo_options', false );
             $options = ($options) ? $options : array();
 
 
-            return $this->import_options( $data['options'] );
+            // return $this->import_options( $data['options'] );
 
 
             die();
         }
 
+            public function import_elementor_data( array $templates ) {               
+                foreach($templates as $template){
+                    
+
+                    $this->import_elementor_post($template);
+
+                    // print_r($template);
+                }
+            }
+
+            public function import_elementor_post($template){
+                $page_template = $template["type"];
+                $template_title = $template["title"];
+
+                extract($template);
+
+                $sanitize_key    = sanitize_key(  $page_template  );
+
+                $args = array(
+                    'post_title'    => wp_strip_all_tags( $title ),
+                    'post_status'   => 'publish',
+                    'post_type'     => 'elementor_library'
+                );
+
+                $post_id = wp_insert_post( $args );
+
+
+                //  if( ! is_wp_error( $post_id ) ){
+                // $json_content = json_decode( $data , true );
+                // update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+                // update_post_meta( $post_id, '_elementor_data', $json_content['content'] );
+                // update_post_meta( $post_id, '_elementor_version', '0.4' );
+
+                //     if( ! empty( $page_template ) ){
+                //         update_post_meta( $post_id, '_wp_page_template', $page_template );
+                //     }
+
+                //     if( $post_type === 'elementor_library' ) {
+                //         update_post_meta( $post_id, '_elementor_template_type', $page_template );
+                //     }               
+
+                // }else{
+                //     //there was an error in the post insertion,
+                //     $data = false;
+                // }
+                $data = serpwars_get_transient( $sanitize_key ) ;
+                print_r($post_id);
+            }
 
             public function import_options( array $options ) {
         // $auxin_custom_images   = $this->get_options_by_type( 'image' );
         extract( $options );
 
-
-        foreach ( $theme_options as $serpwars_key => $serpwars_value ) {
-            if ( in_array( $serpwars_key, $auxin_custom_images ) && ! empty( $serpwars_value ) ) {
-                // This line is for changing the old attachment ID with new one.
-                $serpwars_value    = $this->get_attachment_id( 'auxin_import_id', $serpwars_value );
-            }
-            // Update exclusive auxin options
-            print_r(maybe_unserialize( $serpwars_value ) );
-            // auxin_update_option( $serpwars_key , maybe_unserialize( $serpwars_value ) );
-        }
+        // foreach ( $theme_options as $serpwars_key => $serpwars_value ) {
+        //     if ( in_array( $serpwars_key, $auxin_custom_images ) && ! empty( $serpwars_value ) ) {
+        //         // This line is for changing the old attachment ID with new one.
+        //         $serpwars_value    = $this->get_attachment_id( 'auxin_import_id', $serpwars_value );
+        //     }
+        //     // Update exclusive auxin options
+        //     print_r(maybe_unserialize( $serpwars_value ) );
+        //     // auxin_update_option( $serpwars_key , maybe_unserialize( $serpwars_value ) );
+        // }
 
         // foreach ( $site_options as $site_key => $site_value ) {
         //     // If option value is empty, continue...
@@ -153,7 +215,8 @@
 
         public function get_demo_data(){
         // Get & return json data from local server
-        if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . '/json/demo.json' ) ) ) {
+        if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . '/json/sample-demo.json' ) ) ) {
+
             $data = json_decode( $data, true );
             return  $data['data'];
         }
