@@ -63,17 +63,44 @@
                 // $this->import_elementor_data($data['elementor_templates']);
             }
             if(isset($data['cptui'])){
-                $cptdata = get_option( 'cptui_post_types', false );
-
-                $cptdata = ($cptdata) ? $cptdata : array();
-
-
-                foreach ($data['cptui'] as $i=>$item) {
-                     $cptdata[$item['name']] = $item;
-                }
-                update_option('cptui_post_types',$cptdata,true);
-                echo "CPT UI Options Imported";
+                // $cptdata = get_option( 'cptui_post_types', false );
+                // $cptdata = ($cptdata) ? $cptdata : array();
+                // foreach ($data['cptui'] as $i=>$item) {
+                //      $cptdata[$item['name']] = $item;
+                // }
+                // update_option('cptui_post_types',$cptdata,true);
+                // echo "CPT UI Options Imported";
             }
+
+            if(isset($data['acf'])){
+                $ids = array();
+                foreach($data['acf'] as $acf){
+                    $post = acf_get_field_group_post( $acf['key'] );
+                    if( $post ) {
+                        $field_group['ID'] = $post->ID;
+                    }
+                    $acf = acf_import_field_group( $acf );
+                    $ids[] = $acf['ID'];
+                    $total = count($ids);
+                    $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
+
+                    // $args = array(
+                    //     'post_title'    => wp_strip_all_tags( $acf['post_title'] ),
+                    //     'post_excerpt'    => $acf['post_excerpt'] ,
+                    //     'post_status'   => 'publish',
+                    //     'post_type'     => 'acf-field-group',
+                    //     'post_content'  => serialize($acf['post_content'])
+                    // );
+
+                    // $args = wp_slash( $args );
+                    // $post_id = wp_insert_post( $args );
+                    // print_r(acf_update_field_group($acf['post_content']));
+                    // print_r(acf_update_field_group($acf));
+                }
+            }
+
+
+
             $options = get_option( 'serpwars_demo_options', false );
             $options = ($options) ? $options : array();
 
