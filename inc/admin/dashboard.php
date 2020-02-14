@@ -39,6 +39,8 @@
 				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 				add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 
+			
+
 				// add_action( 'admin_init', array( self::$_instance, 'admin_init' ) );
 	
 				// Tabs.
@@ -70,6 +72,8 @@
         ) );
 
 		}
+
+		
 		
 		public function ajax_plugins() {
 			// Inputs validations

@@ -46,6 +46,7 @@
             add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
+            add_action( 'wp_ajax_nopriv_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
 
 
 
@@ -60,7 +61,58 @@
 			}
 
 		}
+		public function get_plugin_status() {
+			$pluginList = array();
+			
+			$plugins  = array(
+				'all'      => array(), // Meaning: all plugins which still have open actions.
+				'install'  => array(),
+				'update'   => array(),
+				'activate' => array(),
+        	);
+			foreach ( $this->tgmpa_instance->plugins as $slug => $plugin ) {
 
+				$pluginList[$slug] = (object)array();
+				
+				$pluginList[$slug]->slug = $slug;
+				$pluginList[$slug]->hasUpdate = false;
+				$pluginList[$slug]->isInstalled = false;
+
+				if( ! empty( $custom_list ) && ! in_array( $slug, $custom_list ) ){
+					// This condition is for custom requests lists
+					continue;
+				} elseif( $this->tgmpa_instance->is_plugin_active( $slug ) && false === $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
+					$pluginList[$slug]->isActive = true;
+					$pluginList[$slug]->hasUpdate = false;
+					// No need to display plugins if they are installed, up-to-date and active.
+					continue;
+				} else {
+					$plugins['all'][ $slug ] = $plugin;
+	
+					if ( ! $this->tgmpa_instance->is_plugin_installed( $slug ) ) {
+						$pluginList[$slug]->isInstalled = false;
+
+					} else {
+						$pluginList[$slug]->isInstalled = true;
+	
+						if ( false !== $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
+							$pluginList[$slug]->hasUpdate = true;
+
+						}
+						if ( $this->tgmpa_instance->can_plugin_activate( $slug ) ) {
+
+						}
+	
+					}
+				}
+			}
+			wp_send_json_success( (object)$pluginList );
+
+
+
+
+			die();
+		}
 		public function set_tgmpa_url() {
 			$this->tgmpa_menu_slug 	= ( property_exists( $this->tgmpa_instance, 'menu' ) ) ? $this->tgmpa_instance->menu : $this->tgmpa_menu_slug;
 			$this->tgmpa_menu_slug 	= apply_filters( $this->theme_id . '_theme_setup_wizard_tgmpa_menu_slug', $this->tgmpa_menu_slug );
