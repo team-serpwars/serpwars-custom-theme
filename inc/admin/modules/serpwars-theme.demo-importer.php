@@ -60,7 +60,8 @@
             }
 
             if(isset($data['elementor_templates'])){
-                // $this->import_elementor_data($data['elementor_templates']);
+                // print_r($data['elementor_templates']);
+                $this->import_elementor_data($data['elementor_templates']);
             }
             if(isset($data['cptui'])){
                 // $cptdata = get_option( 'cptui_post_types', false );
@@ -74,29 +75,16 @@
 
             if(isset($data['acf'])){
                 $ids = array();
-                foreach($data['acf'] as $acf){
-                    $post = acf_get_field_group_post( $acf['key'] );
-                    if( $post ) {
-                        $field_group['ID'] = $post->ID;
-                    }
-                    $acf = acf_import_field_group( $acf );
-                    $ids[] = $acf['ID'];
-                    $total = count($ids);
-                    $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
-
-                    // $args = array(
-                    //     'post_title'    => wp_strip_all_tags( $acf['post_title'] ),
-                    //     'post_excerpt'    => $acf['post_excerpt'] ,
-                    //     'post_status'   => 'publish',
-                    //     'post_type'     => 'acf-field-group',
-                    //     'post_content'  => serialize($acf['post_content'])
-                    // );
-
-                    // $args = wp_slash( $args );
-                    // $post_id = wp_insert_post( $args );
-                    // print_r(acf_update_field_group($acf['post_content']));
-                    // print_r(acf_update_field_group($acf));
-                }
+                // foreach($data['acf'] as $acf){
+                //     $post = acf_get_field_group_post( $acf['key'] );
+                //     if( $post ) {
+                //         $field_group['ID'] = $post->ID;
+                //     }
+                //     $acf = acf_import_field_group( $acf );
+                //     $ids[] = $acf['ID'];
+                //     $total = count($ids);
+                //     $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
+                // }
             }
 
 
@@ -140,23 +128,23 @@
 
                 //  if( ! is_wp_error( $post_id ) ){
                 // $json_content = json_decode( $data , true );
-                // update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
-                // update_post_meta( $post_id, '_elementor_data', $json_content['content'] );
-                // update_post_meta( $post_id, '_elementor_version', '0.4' );
+                update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+                update_post_meta( $post_id, '_elementor_data',$content);
+                update_post_meta( $post_id, '_elementor_version', '2.5.14' );
 
                 //     if( ! empty( $page_template ) ){
-                //         update_post_meta( $post_id, '_wp_page_template', $page_template );
+                        update_post_meta( $post_id, '_wp_page_template', '_default' );
                 //     }
 
                 //     if( $post_type === 'elementor_library' ) {
-                //         update_post_meta( $post_id, '_elementor_template_type', $page_template );
+                        update_post_meta( $post_id, '_elementor_template_type', $page_template );
                 //     }               
 
                 // }else{
                 //     //there was an error in the post insertion,
                 //     $data = false;
                 // }
-                $data = serpwars_get_transient( $sanitize_key ) ;
+
                 print_r($post_id);
             }
 
