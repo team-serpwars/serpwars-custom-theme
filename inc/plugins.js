@@ -193,13 +193,24 @@
 
 
 	$("body").on("click","a.install-plugins",function(e){
-		console.log("cloickpasjd");
+		console.log("Initialize Plugin Installation");
 		e.preventDefault();
 		// $.post(ajaxurl,{action:"serpwars_setup_plugins",slug:"font-awesome",nonce:aux_setup_params.wpnonce,plugins:['font-awesome','elementor']},function(data){
 		// 		console.log(data)
 		// })		
 
 		_installPlugin();
+	})
+	$("body").on("click","a.demo-importer",function(e){
+		console.log("Initialize Demo Importer");
+		$.ajax({
+                url: aux_setup_params.ajaxurl,
+                type: "post",
+                data: {
+                	action:"serpwars_demo_data",
+
+                }
+            }).done(callback);
 	})
 					
 					
