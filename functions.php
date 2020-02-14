@@ -88,6 +88,20 @@ if ( ! function_exists( 'elementor_hello_theme_register_elementor_locations' ) )
 add_action( 'elementor/theme/register_locations', 'elementor_hello_theme_register_elementor_locations' );
 
 
+
+function serpwars_get_transient($transient){
+	global $_wp_using_ext_object_cache;
+
+    $current_using_cache = $_wp_using_ext_object_cache;
+    $_wp_using_ext_object_cache = false;
+
+    $result = get_transient( $transient );
+
+    $_wp_using_ext_object_cache = $current_using_cache;
+
+    return $result;
+}
+
 if ( ! class_exists( 'WP_Importer' ) ) {
 	defined( 'WP_LOAD_IMPORTERS' ) || define( 'WP_LOAD_IMPORTERS', true );
 	require ABSPATH . '/wp-admin/includes/class-wp-importer.php';

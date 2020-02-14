@@ -61,7 +61,8 @@
 
             if(isset($data['elementor_templates'])){
                 // print_r($data['elementor_templates']);
-                $this->import_elementor_data($data['elementor_templates']);
+                wp_send_json_error( $data['elementor_templates']) ;
+
             }
             if(isset($data['cptui'])){
                 // $cptdata = get_option( 'cptui_post_types', false );
