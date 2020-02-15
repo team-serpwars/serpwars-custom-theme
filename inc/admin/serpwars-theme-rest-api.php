@@ -47,6 +47,8 @@
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
+            add_action( 'wp_ajax_nopriv_serpwars_check_post_exists'	, array(  $this, 'check_post_exists'));
+            add_action( 'wp_ajax_nopriv_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
 
 
 
@@ -60,6 +62,26 @@
 				add_filter( 'wp_redirect', '__return_false', 1 );
 			}
 
+		}
+		public function check_cpt_exists() {
+			$slug = sanitize_text_field($_POST['slug']);
+			$cpt_option = get_option("cptui_post_types",true);
+
+			foreach ($cpt_option as $key=>$option) {
+				if($slug==$key){
+					wp_send_json_success();
+				}
+			}
+			wp_send_json_error();
+
+		}
+		public function check_post_exists() {
+			$id = sanitize_text_field($_POST['id']);
+			if(get_post($id)){
+				wp_send_json_success();
+			}else{
+				wp_send_json_error();				
+			}
 		}
 		public function get_plugin_status() {
 			$pluginList = array();
@@ -75,13 +97,16 @@
 				$pluginList[$slug] = (object)array();
 				
 				$pluginList[$slug]->slug = $slug;
+				$pluginList[$slug]->name = $plugin["name"];
 				$pluginList[$slug]->hasUpdate = false;
 				$pluginList[$slug]->isInstalled = false;
+				$pluginList[$slug]->isChecked = true;
 
 				if( ! empty( $custom_list ) && ! in_array( $slug, $custom_list ) ){
 					// This condition is for custom requests lists
 					continue;
 				} elseif( $this->tgmpa_instance->is_plugin_active( $slug ) && false === $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
+						$pluginList[$slug]->isInstalled = true;
 					$pluginList[$slug]->isActive = true;
 					$pluginList[$slug]->hasUpdate = false;
 					// No need to display plugins if they are installed, up-to-date and active.
@@ -94,6 +119,7 @@
 
 					} else {
 						$pluginList[$slug]->isInstalled = true;
+						$pluginList[$slug]->isChecked = false;
 	
 						if ( false !== $this->tgmpa_instance->does_plugin_have_update( $slug ) ) {
 							$pluginList[$slug]->hasUpdate = true;
@@ -106,7 +132,7 @@
 					}
 				}
 			}
-			wp_send_json_success( (object)$pluginList );
+			wp_send_json_success( (object) $pluginList );
 
 
 
