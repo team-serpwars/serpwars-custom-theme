@@ -372,8 +372,9 @@
 		}
 		function page() {
 			$this->setup();
-			$this->page_header();
-			$this->page_content();
+			// $this->page_header();
+			// $this->page_content();
+			$this->page_contents();
 			echo '<div class="wrap">';
 			$cb = apply_filters( 'serpwars/dashboard/content_cb', false );
 			if ( ! is_callable( $cb ) ) {
@@ -386,6 +387,9 @@
 	
 			echo '</div>';
 		}
+		public function page_contents() { ?>
+			<div id="app"></div>
+		<?php }
 		public function page_content() { ?>
 			<div class="required-plugins">
 				<?php $plugins = $this->get_plugins();?>
@@ -451,8 +455,7 @@
                 		'strong' => array(),
             		) ); ?></h1>
 					
-					<span class="cd-version"><?php echo esc_html( $this->config['version'] ); ?></span>
-				
+					<span class="cd-version"><?php echo esc_html( $this->config['version'] ); ?></span>				
 
 				</div>
 			</div>

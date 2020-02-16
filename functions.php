@@ -88,6 +88,17 @@ if ( ! function_exists( 'elementor_hello_theme_register_elementor_locations' ) )
 add_action( 'elementor/theme/register_locations', 'elementor_hello_theme_register_elementor_locations' );
 
 
+function serpwars_custom_theme_scripts_styles($hook){
+	if($hook=="toplevel_page_serpwars"){		
+		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
+		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.02f16758.css" );
+		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.a64726e0.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.14436c6a.js" , array(), "1.0.0", true );
+	}
+
+}
+
+add_action( 'admin_enqueue_scripts', 'serpwars_custom_theme_scripts_styles' );
 
 function serpwars_get_transient($transient){
 	global $_wp_using_ext_object_cache;

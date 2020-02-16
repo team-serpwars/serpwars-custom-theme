@@ -100,7 +100,10 @@
 				$pluginList[$slug]->name = $plugin["name"];
 				$pluginList[$slug]->hasUpdate = false;
 				$pluginList[$slug]->isInstalled = false;
+				$pluginList[$slug]->isActive = false;
+				$pluginList[$slug]->isDone = false;
 				$pluginList[$slug]->isChecked = true;
+				$pluginList[$slug]->status = "";
 
 				if( ! empty( $custom_list ) && ! in_array( $slug, $custom_list ) ){
 					// This condition is for custom requests lists
