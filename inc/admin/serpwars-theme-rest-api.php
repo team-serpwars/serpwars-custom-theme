@@ -47,8 +47,11 @@
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
+            add_action( 'wp_ajax_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
             add_action( 'wp_ajax_nopriv_serpwars_check_post_exists'	, array(  $this, 'check_post_exists'));
+            add_action( 'wp_ajax_serpwars_check_post_exists'	, array(  $this, 'check_post_exists'));
             add_action( 'wp_ajax_nopriv_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
+            add_action( 'wp_ajax_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
 
 
 

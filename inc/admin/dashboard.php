@@ -50,10 +50,16 @@
 		return self::$_instance;
 
 		}
-		 function scripts(){
- 			wp_enqueue_script( 'custom-plugin', get_template_directory_uri() . '/inc/plugins.js' ,array('jquery'),false,true);
+		 function scripts($hook){
 
- 			 wp_localize_script( 'custom-plugin', 'aux_setup_params', array(
+
+		if($hook=="toplevel_page_serpwars"){		
+		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
+		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.02f16758.css" );
+		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.a64726e0.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.803288cc.js" , array(), "1.0.0", true );
+
+		wp_localize_script( 'serpwars-custom-theme-app', 'aux_setup_params', array(
             'tgm_plugin_nonce' => array(
                 'update'  => wp_create_nonce( 'tgmpa-update' ),
                 'install' => wp_create_nonce( 'tgmpa-install' ),
@@ -70,6 +76,12 @@
             'onbefore_text'    => esc_html__( 'Please do not refresh or leave the page during the wizard\'s process.', 'auxin-elements' ),
             'svg_loader'       => '<svg width="90" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#505050"><circle cx="10" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="50" cy="10" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;10;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="90" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg>'
         ) );
+
+
+		}
+ 			// wp_enqueue_script( 'custom-plugin', get_template_directory_uri() . '/inc/plugins.js' ,array('jquery'),false,true);
+
+ 		
 
 		}
 
