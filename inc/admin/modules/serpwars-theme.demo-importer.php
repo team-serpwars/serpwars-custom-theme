@@ -79,7 +79,7 @@
          public function import() {
     	 	//
 
-    	 	$data = json_decode( $this->parse( 'http://localhost/custom-site/wp-content/uploads/json/sample-data.json', 'insert', 'post' ), true );
+    	 	$data = json_decode( $this->parse( 'https://localhost/custom-site/wp-content/uploads/json/sample-data.json', 'insert', 'post' ), true );
 
 
 
