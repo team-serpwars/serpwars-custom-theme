@@ -24,6 +24,7 @@
             add_action( 'wp_ajax_serpwars_import_step'           , array( $this, 'import_step') );
             add_action( 'wp_ajax_nopriv_serpwars_import_step'           , array( $this, 'import_step') );
             add_action( 'wp_ajax_nopriv_serpwars_import_options'           , array( $this, 'import_options') );
+            add_action( 'wp_ajax_nopriv_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
 
             add_action( 'wp_ajax_serpwars_import_templates'           , array( $this, 'import_templates') );
             add_action( 'wp_ajax_nopriv_serpwars_import_templates'           , array( $this, 'import_templates') );
@@ -102,6 +103,45 @@
 
     	 }
 
+        public function import_acf_options2() {
+        }
+        public function import_acf_options() {
+            $data    = $this->get_demo_data();
+            $theme_options = get_option("serpwars_theme_options");
+
+
+            if(isset($data['acf'])){
+                $ids = array();
+                foreach($data['acf'] as $index => $acf){
+                    if($theme_options["acf"][$index]->id == 0 ){
+                        $post = acf_get_field_group_post( $acf['key'] );
+                        if( $post ) {
+                            $acf['ID'] = $post->ID;
+                            $theme_options["acf"][$index] = (object) array(
+                                "id"=> $post->ID,
+                                "title"=> $post->post_title,
+                                "found"=> true
+                            );
+                        }
+                        $field_group['ID'] = $post->ID;
+                        $acf = acf_import_field_group( $acf );
+                        $ids[] = $acf['ID'];
+                        $total = count($ids);
+                        $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );                       
+                       
+
+                    }              
+                
+                }
+
+
+            update_option("serpwars_theme_options","" );
+            update_option("serpwars_theme_options",$theme_options );
+
+            }
+
+            wp_send_json_success($theme_options);
+        }
         public function import_options() {
             $data    = $this->get_demo_data();
             $theme_options = get_option("serpwars_theme_options");
@@ -129,31 +169,10 @@
                 update_option('cptui_post_types',$cptdata,true);
                 $theme_options["cptui"] = $cpt;
 
-                // echo "CPT UI Options Imported";
             }
 
-            if(isset($data['acf'])){
-                $ids = array();
-                foreach($data['acf'] as $acf){
-                    $post = acf_get_field_group_post( $acf['key'] );
-                    if( $post ) {
-                        $field_group['ID'] = $post->ID;
-                    }
-                    $acf = acf_import_field_group( $acf );
-                    $ids[] = $acf['ID'];
-                    $total = count($ids);
-                    $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );
+            
 
-                    array_push($acf_local,(object)array(
-                        "title" => $post->post_title,
-                        "id" => $post->ID,
-                        "found"=>true
-                    ));  
-                }
-                $theme_options["acf"] = $acf_local;
-            }
-
-            // print_r($theme_options);
             update_option("serpwars_theme_options","" );
             update_option("serpwars_theme_options",$theme_options );
             wp_send_json_success($theme_options);
@@ -168,12 +187,13 @@
 
             $url = sanitize_text_field($_POST['url']);
             $name = sanitize_text_field($_POST['name']);
+            $index = sanitize_text_field($_POST['index']);
 
              if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
 
             $template = json_decode( $data, true );
 
-            $this->import_elementor_post($name,$template);
+            $this->import_elementor_post($name,$index,$template);
 
             }       
         }
@@ -206,20 +226,21 @@
                 }
             }
 
-            public function import_elementor_post($name,$template){
+            public function import_elementor_post($name,$index,$template){
                 $theme_options = get_option("serpwars_theme_options");
                 $page_template = $template["type"];
                 $template_title = $template["title"];
                 $item_index = -1;
 
-                foreach ($theme_options["elementor_templates"] as $index=>$item) {
-                    if($name == $item->name){
+                // foreach ($theme_options["elementor_templates"] as $index=>$item) {
+                $item = $theme_options["elementor_templates"][$index];
+                    if($name == $item->name && !get_post($item->id)){
                          extract($template);
 
                 $sanitize_key    = sanitize_key(  $page_template  );
 
                 $args = array(
-                    'post_title'    => wp_strip_all_tags( $title ),
+                    'post_title'    => wp_strip_all_tags( $item->name ),
                     'post_status'   => 'publish',
                     'post_type'     => 'elementor_library'
                 );
@@ -227,32 +248,47 @@
                 $post_id = wp_insert_post( $args );
 
 
-                //  if( ! is_wp_error( $post_id ) ){
-                // $json_content = json_decode( $data , true );
-                update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
-                update_post_meta( $post_id, '_elementor_data',$content);
-                update_post_meta( $post_id, '_elementor_version', '2.5.14' );
+                    if(!is_wp_error($post_id)){
+                    // $json_content = json_decode( $data , true );
+                    update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+                    update_post_meta( $post_id, '_elementor_data',$content);
+                    update_post_meta( $post_id, '_elementor_version', '2.5.14' );
+    
+                    //     if( ! empty( $page_template ) ){
+                            update_post_meta( $post_id, '_wp_page_template', '_default' );
+                    //     }
+    
+                    //     if( $post_type === 'elementor_library' ) {
+                            update_post_meta( $post_id, '_elementor_template_type', $page_template );
+                    //     }               
+                        $theme_options["elementor_templates"][$index]->id = $post_id;
+    
+    
+                        update_option("serpwars_theme_options","" );
+                        update_option("serpwars_theme_options",$theme_options );
+    
+                        wp_send_json_success(array(
+                            "option"=>$theme_options,
+                            "post_id"=>$post_id,
+                            "stuff"=>$theme_options["elementor_templates"][$index]->id
+                        ));
+    
+                    }else{
+                    //     //there was an error in the post insertion,
+                        // $data = false;
+                        wp_send_json_error($post_id);
+                    }
 
-                //     if( ! empty( $page_template ) ){
-                        update_post_meta( $post_id, '_wp_page_template', '_default' );
-                //     }
 
-                //     if( $post_type === 'elementor_library' ) {
-                        update_post_meta( $post_id, '_elementor_template_type', $page_template );
-                //     }               
-
-                // }else{
-                //     //there was an error in the post insertion,
-                //     $data = false;
-                // // }
-
-                    $theme_options["elementor_templates"][$index]->id = $post_id;
-
-                    update_option("serpwars_theme_options","" );
-                    update_option("serpwars_theme_options",$theme_options );
-                    wp_send_json_success($post_id);
-                    }                    
-                }
+               
+                }elseif (get_post($item->id)) {
+                    wp_send_json_success(array(
+                    "option"=>$theme_options,
+                    "post_id"=>$post_id,
+                    "stuff"=>$theme_options["elementor_templates"][$index]->id
+                    ));
+                }                    
+                // }
                
 
                 // print_r($post_id);
