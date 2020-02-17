@@ -19,14 +19,64 @@
     	    add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
     	    add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
 
+            add_action( 'wp_ajax_nopriv_serpwars_load_options'           , array( $this, 'load_options') );
+            add_action( 'wp_ajax_serpwars_load_options'           , array( $this, 'load_options') );
             add_action( 'wp_ajax_serpwars_import_step'           , array( $this, 'import_step') );
             add_action( 'wp_ajax_nopriv_serpwars_import_step'           , array( $this, 'import_step') );
+            add_action( 'wp_ajax_nopriv_serpwars_import_options'           , array( $this, 'import_options') );
 
+            add_action( 'wp_ajax_serpwars_import_templates'           , array( $this, 'import_templates') );
+            add_action( 'wp_ajax_nopriv_serpwars_import_templates'           , array( $this, 'import_templates') );
+            add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
+            add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
     	    // add_action( 'wp_ajax_auxin_templates_data'  , array( $this, 'templates') );
     	    // add_action( 'wp_ajax_import_step'           , array( $this, 'import_step') );
     	}
 
-    	 public function import() {
+    	 public function load_options() {
+
+            $theme_options = get_option("serpwars_theme_options") ? get_option("serpwars_theme_options") : array();
+
+            if(empty($theme_options)){
+                $data    = $this->get_demo_data();
+
+                $options = array(
+                    "elementor_templates" => array(),
+                    "acf"=>array(),
+                    "cptui"=>array()
+                );               
+
+                foreach ($data['elementor_templates'] as $i=>$item) {
+                    array_push($options["elementor_templates"],(object)array(
+                        "name" => $item['name'],
+                        "id" => 0
+                    ));            
+                }
+                foreach ($data['acf'] as $i=>$item) {
+                    array_push($options["acf"],(object)array(
+                        "title" => $item['title'],
+                        "id" => 0
+                    ));            
+                }
+
+                foreach ($data['cptui'] as $i=>$item) {
+                    array_push($options["cptui"],(object)array(
+                        "slug" => $item['name'],
+                        "title" => $item['label']
+                    ));                
+                }
+                
+                // print_r($options);
+
+                update_option("serpwars_theme_options",$options );
+                $theme_options = get_option("serpwars_theme_options") ;
+            }
+
+            wp_send_json_success($theme_options);
+
+
+         }
+         public function import() {
     	 	//
 
     	 	$data = json_decode( $this->parse( 'http://localhost/custom-site/wp-content/uploads/json/sample-data.json', 'insert', 'post' ), true );
@@ -52,40 +102,86 @@
 
     	 }
 
-        public function import_step() {
+        public function import_options() {
             $data    = $this->get_demo_data();
+            $theme_options = get_option("serpwars_theme_options");
 
-            if( ! is_array( $data ) ){
-                wp_send_json_error( array( 'message' => __( 'Error in getting data!', 'serpwars' ) ) );
-            }
-
-            if(isset($data['elementor_templates'])){
-                // print_r($data['elementor_templates']);
-                wp_send_json_error( $data['elementor_templates']) ;
-
-            }
             if(isset($data['cptui'])){
-                // $cptdata = get_option( 'cptui_post_types', false );
-                // $cptdata = ($cptdata) ? $cptdata : array();
-                // foreach ($data['cptui'] as $i=>$item) {
-                //      $cptdata[$item['name']] = $item;
-                // }
-                // update_option('cptui_post_types',$cptdata,true);
+                $cptdata = get_option( 'cptui_post_types', false );
+                $cptdata = ($cptdata) ? $cptdata : array();
+                $cpt = array();
+                $acf_local = array();
+
+                    // print_r($cptdata[$item['name']]['name']);
+                foreach ($data['cptui'] as $i=>$item) {
+                    // Check if item exist
+                    if(!isset($cptdata[$item['name']])){
+                        $cptdata[$item['name']] = $item;                    
+                    }
+                    array_push($cpt,(object) array(
+                        "slug" => $item['name'],
+                        "title" => $item['label'],
+                        "found" => true,
+                    ));
+
+                }
+
+                update_option('cptui_post_types',$cptdata,true);
+                $theme_options["cptui"] = $cpt;
+
                 // echo "CPT UI Options Imported";
             }
 
             if(isset($data['acf'])){
                 $ids = array();
-                // foreach($data['acf'] as $acf){
-                //     $post = acf_get_field_group_post( $acf['key'] );
-                //     if( $post ) {
-                //         $field_group['ID'] = $post->ID;
-                //     }
-                //     $acf = acf_import_field_group( $acf );
-                //     $ids[] = $acf['ID'];
-                //     $total = count($ids);
-                //     $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
-                // }
+                foreach($data['acf'] as $acf){
+                    $post = acf_get_field_group_post( $acf['key'] );
+                    if( $post ) {
+                        $field_group['ID'] = $post->ID;
+                    }
+                    $acf = acf_import_field_group( $acf );
+                    $ids[] = $acf['ID'];
+                    $total = count($ids);
+                    $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );
+
+                    array_push($acf_local,(object)array(
+                        "title" => $post->post_title,
+                        "id" => $post->ID,
+                        "found"=>true
+                    ));  
+                }
+                $theme_options["acf"] = $acf_local;
+            }
+
+            // print_r($theme_options);
+            update_option("serpwars_theme_options","" );
+            update_option("serpwars_theme_options",$theme_options );
+            wp_send_json_success($theme_options);
+        }
+        public function import_templates() {
+            $data    = $this->get_demo_data();
+            if(isset($data['elementor_templates'])){             
+                wp_send_json_success( $data['elementor_templates']) ;
+            }
+        }
+        public function import_template() {
+
+            $url = sanitize_text_field($_POST['url']);
+            $name = sanitize_text_field($_POST['name']);
+
+             if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
+
+            $template = json_decode( $data, true );
+
+            $this->import_elementor_post($name,$template);
+
+            }       
+        }
+        public function import_step() {
+            $data    = $this->get_demo_data();
+
+            if( ! is_array( $data ) ){
+                wp_send_json_error( array( 'message' => __( 'Error in getting data!', 'serpwars' ) ) );
             }
 
 
@@ -104,17 +200,21 @@
                 foreach($templates as $template){
                     
 
-                    $this->import_elementor_post($template);
+                    // $this->import_elementor_post($template);
 
                     // print_r($template);
                 }
             }
 
-            public function import_elementor_post($template){
+            public function import_elementor_post($name,$template){
+                $theme_options = get_option("serpwars_theme_options");
                 $page_template = $template["type"];
                 $template_title = $template["title"];
+                $item_index = -1;
 
-                extract($template);
+                foreach ($theme_options["elementor_templates"] as $index=>$item) {
+                    if($name == $item->name){
+                         extract($template);
 
                 $sanitize_key    = sanitize_key(  $page_template  );
 
@@ -144,90 +244,21 @@
                 // }else{
                 //     //there was an error in the post insertion,
                 //     $data = false;
-                // }
+                // // }
 
-                print_r($post_id);
+                    $theme_options["elementor_templates"][$index]->id = $post_id;
+
+                    update_option("serpwars_theme_options","" );
+                    update_option("serpwars_theme_options",$theme_options );
+                    wp_send_json_success($post_id);
+                    }                    
+                }
+               
+
+                // print_r($post_id);
             }
 
-            public function import_options( array $options ) {
-        // $auxin_custom_images   = $this->get_options_by_type( 'image' );
-        extract( $options );
-
-        // foreach ( $theme_options as $serpwars_key => $serpwars_value ) {
-        //     if ( in_array( $serpwars_key, $auxin_custom_images ) && ! empty( $serpwars_value ) ) {
-        //         // This line is for changing the old attachment ID with new one.
-        //         $serpwars_value    = $this->get_attachment_id( 'auxin_import_id', $serpwars_value );
-        //     }
-        //     // Update exclusive auxin options
-        //     print_r(maybe_unserialize( $serpwars_value ) );
-        //     // auxin_update_option( $serpwars_key , maybe_unserialize( $serpwars_value ) );
-        // }
-
-        // foreach ( $site_options as $site_key => $site_value ) {
-        //     // If option value is empty, continue...
-        //     if ( empty( $site_value ) ) continue;
-        //     // Else change some values :)
-        //     if( $site_key === 'page_on_front' || $site_key === 'page_for_posts' ) {
-        //         $site_value = $this->get_meta_post_id( 'auxin_import_post', $site_value );
-        //     }
-        //     // Finally update options :)
-        //     update_option( $site_key, $site_value );
-        // }
-
-        // foreach ( $theme_mods as $theme_mods_key => $theme_mods_value ) {
-        //     // Start theme mods loop:
-        //     if( $theme_mods_key === 'custom_logo' ) {
-        //         // This line is for changing the old attachment ID with new one.
-        //         $theme_mods_value = $this->get_attachment_id( 'auxin_import_id', $theme_mods_value );
-        //     }
-        //     // Update theme mods
-        //     set_theme_mod( $theme_mods_key , maybe_unserialize( $theme_mods_value ) );
-        // }
-
-        // foreach ( $plugins_options as $plugin => $options ) {
-        //     if( empty( $options ) ){
-        //         continue;
-        //     }
-        //     foreach ( $options as $option => $value) {
-        //         if( strpos( $option, 'page_id' ) !== false ) {
-        //             $value = $this->get_meta_post_id( 'auxin_import_post', $value );
-        //         }
-        //         update_option( $option, maybe_unserialize( $value ) );
-        //     }
-        // }
-
-        // // @deprecated A temporary fix for an issue with elementor typography scheme
-        // $elementor_typo_scheme = [
-        //     '1' => [
-        //         'font_family' => 'Arial',
-        //         'font_weight' => ''
-        //     ],
-        //     '2' => [
-        //         'font_family' => 'Arial',
-        //         'font_weight' => ''
-        //     ],
-        //     '3' => [
-        //         'font_family' => 'Tahoma',
-        //         'font_weight' => ''
-        //     ],
-        //     '4' => [
-        //         'font_family' => 'Tahoma',
-        //         'font_weight' => ''
-        //     ]
-        // ];
-        // update_option( 'elementor_scheme_typography', $elementor_typo_scheme );
-
-        // set_theme_mod( 'elementor_page_typography_scheme', 0 );
-
-        // // Stores css content in custom css file
-        // auxin_save_custom_css();
-        // // Stores JavaScript content in custom js file
-        // auxin_save_custom_js();
-
-        // wp_send_json_success( array( 'step' => 'options', 'next' => 'menus', 'message' => __( 'Importing Menus', 'auxin-elements' ) ) );
-    }
-
-
+   
 
         public function get_demo_data(){
         // Get & return json data from local server
