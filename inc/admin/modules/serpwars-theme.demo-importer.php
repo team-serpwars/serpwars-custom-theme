@@ -189,7 +189,8 @@
             $name = sanitize_text_field($_POST['name']);
             $index = sanitize_text_field($_POST['index']);
 
-             if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
+             if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/'.$url ) ) ) {
+             // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
 
             $template = json_decode( $data, true );
 
@@ -216,15 +217,7 @@
             die();
         }
 
-            public function import_elementor_data( array $templates ) {               
-                foreach($templates as $template){
-                    
-
-                    // $this->import_elementor_post($template);
-
-                    // print_r($template);
-                }
-            }
+       
 
             public function import_elementor_post($name,$index,$template){
                 $theme_options = get_option("serpwars_theme_options");
@@ -298,7 +291,8 @@
 
         public function get_demo_data(){
         // Get & return json data from local server
-        if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . '/json/sample-demo.json' ) ) ) {
+        // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . '/json/sample-demo.json' ) ) ) {
+        if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/sample-demo.json' ) ) ) {
 
             $data = json_decode( $data, true );
             return  $data['data'];
