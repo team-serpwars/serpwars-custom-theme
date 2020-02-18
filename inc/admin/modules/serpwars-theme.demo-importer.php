@@ -85,17 +85,6 @@
 
 
         	if ( $data['success'] ) {
-	
-        	    // $get_options = $_POST['options'];
-        	    // foreach ( $get_options as $key => $value ) {
-        	    //     $options[ $value['name'] ] = $value['value'];
-        	    // }
-	
-        	    // update_option( 'serpwars_demo_options', $options );
-	
-        	    // update_option( 'serpwars_last_imported_demo', array( 'id' => $demo_ID, 'time' => current_time( 'mysql' ), 'status' => $options ) );
-	
-        	    // flush_rewrite_rules();
     	 		die();
         	    wp_send_json_success();
         	}
@@ -113,7 +102,7 @@
             if(isset($data['acf'])){
                 $ids = array();
                 foreach($data['acf'] as $index => $acf){
-                    if($theme_options["acf"][$index]->id == 0 ){
+                    if($theme_options["acf"][$index]->id == 0 || !get_post($theme_options["acf"][$index]->id)){ //Item has id of 0 or if it does not really exist at all
                         $post = acf_get_field_group_post( $acf['key'] );
                         if( $post ) {
                             $acf['ID'] = $post->ID;
