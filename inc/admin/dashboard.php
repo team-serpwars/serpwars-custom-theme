@@ -24,16 +24,8 @@
 				self::$_instance->tgmpa_instance 	= call_user_func( array( get_class( $GLOBALS['tgmpa'] ),'get_instance' ) );
 				// add_action( 'init'					, array(  self::$_instance, 'get_tgmpa_instanse' ), 30 );
 				add_action( 'admin_menu', array( self::$_instance, 'add_menu' ), 5 );
-				 add_action( 'admin_enqueue_scripts',array(self::$_instance ,'scripts' )  );
+				add_action( 'admin_enqueue_scripts',array(self::$_instance ,'scripts' )  );
 
-				
-				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'copy_theme_settings' ), 5 );
-				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'box_links' ), 10 );
-				// add_action( 'serpwars/dashboard/main', array( self::$_instance, 'pro_modules_box' ), 15 );
-				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_plugins' ), 10 );
-				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
-				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_recommend_plugins' ), 20 );
-				// add_action( 'serpwars/dashboard/sidebar', array( self::$_instance, 'box_community' ), 25 );
 	
 				add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
 				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
@@ -55,9 +47,9 @@
 
 		if($hook=="toplevel_page_serpwars"){		
 		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
-		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.02f16758.css" );
+		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
 		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.a450557c.js" , array(), "1.0.0", true );
-		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.e5f4940f.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.bbf4e635.js" , array(), "1.0.0", true );
 
 		wp_localize_script( 'serpwars-custom-theme-app', 'aux_setup_params', array(
             'tgm_plugin_nonce' => array(

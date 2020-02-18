@@ -1,10 +1,6 @@
 <?php
 	// no direct access allowed
 	if ( ! defined('ABSPATH') )  exit;
-
-	// require_once("modules/serpwars-theme.exporter.php");
-	// require_once("modules/serpwars-theme.import-ui.php");
-	// require_once("modules/serpwars-theme.ajax.php");
 	require_once("modules/serpwars-theme.demo-importer.php");
 	require_once("modules/serpwars-theme.base.php");
 
@@ -42,14 +38,19 @@
 			Serpwars_Demo_Importer::get_instance();
 
 			add_filter( 'tgmpa_load'				, array( $this, 'tgmpa_load' ), 10, 1 );
+			
             add_action( 'wp_ajax_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
             add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
+
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
+
             add_action( 'wp_ajax_nopriv_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
             add_action( 'wp_ajax_serpwars_get_plugin_status'	, array(  $this, 'get_plugin_status'));
+
             add_action( 'wp_ajax_nopriv_serpwars_check_post_exists'	, array(  $this, 'check_post_exists'));
             add_action( 'wp_ajax_serpwars_check_post_exists'	, array(  $this, 'check_post_exists'));
+
             add_action( 'wp_ajax_nopriv_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
             add_action( 'wp_ajax_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
 

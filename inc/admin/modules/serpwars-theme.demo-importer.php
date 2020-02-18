@@ -21,17 +21,18 @@
 
             add_action( 'wp_ajax_nopriv_serpwars_load_options'           , array( $this, 'load_options') );
             add_action( 'wp_ajax_serpwars_load_options'           , array( $this, 'load_options') );
+
             add_action( 'wp_ajax_serpwars_import_step'           , array( $this, 'import_step') );
             add_action( 'wp_ajax_nopriv_serpwars_import_step'           , array( $this, 'import_step') );
+
             add_action( 'wp_ajax_nopriv_serpwars_import_options'           , array( $this, 'import_options') );
             add_action( 'wp_ajax_nopriv_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
 
             add_action( 'wp_ajax_serpwars_import_templates'           , array( $this, 'import_templates') );
             add_action( 'wp_ajax_nopriv_serpwars_import_templates'           , array( $this, 'import_templates') );
+
             add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
             add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
-    	    // add_action( 'wp_ajax_auxin_templates_data'  , array( $this, 'templates') );
-    	    // add_action( 'wp_ajax_import_step'           , array( $this, 'import_step') );
     	}
 
     	 public function load_options() {

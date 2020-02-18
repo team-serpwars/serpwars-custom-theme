@@ -123,7 +123,7 @@ if ( ! function_exists( 'load_tgm_plugin_activation' ) ) {
 	}
 
 
-require_once get_template_directory() . '/inc/class-theme-custom-test.php';
+
 require_once get_template_directory() . '/inc/class-theme-custom.php';
 
 function SW_Theme_Custom() {
