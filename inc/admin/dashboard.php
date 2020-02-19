@@ -49,15 +49,15 @@
 		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
 		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
 		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.2d08656d.js" , array(), "1.0.0", true );
-		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.196275d2.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.a90e43d7.js" , array(), "1.0.0", true );
 
-		wp_localize_script( 'serpwars-custom-theme-app', 'aux_setup_params', array(
+		wp_localize_script( 'serpwars-custom-theme-app', 'serpwars_setup_params', array(
             'tgm_plugin_nonce' => array(
                 'update'  => wp_create_nonce( 'tgmpa-update' ),
                 'install' => wp_create_nonce( 'tgmpa-install' ),
             ),
             'ajaxurl'          => admin_url( 'admin-ajax.php' ),
-            'wpnonce'          => wp_create_nonce( 'aux_setup_nonce' ),
+            'wpnonce'          => wp_create_nonce( 'serpwars_setup_nonce' ),
             'imported_done'    => esc_html__( 'This demo has been successfully imported.', 'auxin-elements' ),
             'imported_fail'    => esc_html__( 'Whoops! There was a problem in demo importing.', 'auxin-elements' ),
             'progress_text'    => esc_html__( 'Processing: Download', 'auxin-elements' ),
