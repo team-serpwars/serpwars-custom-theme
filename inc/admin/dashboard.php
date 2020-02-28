@@ -51,7 +51,7 @@
 		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
 		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
 		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.6089e68e.js" , array(), "1.0.0", true );
-		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.249330ea.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.c8d6554c.js" , array(), "1.0.0", true );
 
 		wp_localize_script( 'serpwars-custom-theme-app', 'serpwars_setup_params', array(
             'tgm_plugin_nonce' => array(
@@ -60,14 +60,14 @@
             ),
             'ajaxurl'          => admin_url( 'admin-ajax.php' ),
             'wpnonce'          => wp_create_nonce( 'serpwars_setup_nonce' ),
-            'imported_done'    => esc_html__( 'This demo has been successfully imported.', 'auxin-elements' ),
-            'imported_fail'    => esc_html__( 'Whoops! There was a problem in demo importing.', 'auxin-elements' ),
-            'progress_text'    => esc_html__( 'Processing: Download', 'auxin-elements' ),
-            'nextstep_text'    => esc_html__( 'Continue', 'auxin-elements' ),
-            'activate_text'    => esc_html__( 'Install Plugins', 'auxin-elements' ),
-            'makedemo_text'    => esc_html__( 'Import Content', 'auxin-elements' ),
-            'btnworks_text'    => esc_html__( 'Installing...', 'auxin-elements' ),
-            'onbefore_text'    => esc_html__( 'Please do not refresh or leave the page during the wizard\'s process.', 'auxin-elements' ),
+            'imported_done'    => esc_html__( 'This demo has been successfully imported.', 'serpwars' ),
+            'imported_fail'    => esc_html__( 'Whoops! There was a problem in demo importing.', 'serpwars' ),
+            'progress_text'    => esc_html__( 'Processing: Download', 'serpwars' ),
+            'nextstep_text'    => esc_html__( 'Continue', 'serpwars' ),
+            'activate_text'    => esc_html__( 'Install Plugins', 'serpwars' ),
+            'makedemo_text'    => esc_html__( 'Import Content', 'serpwars' ),
+            'btnworks_text'    => esc_html__( 'Installing...', 'serpwars' ),
+            'onbefore_text'    => esc_html__( 'Please do not refresh or leave the page during the Installation process.', 'serpwars' ),
             'svg_loader'       => '<svg width="90" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#505050"><circle cx="10" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="50" cy="10" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;10;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="90" cy="10" r="10"><animate attributeName="r" from="10" to="10" begin="0s" dur="0.8s" values="10;9;10" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg>'
         ) );
 
@@ -99,7 +99,7 @@
 					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
 					'action'        => 'tgmpa-bulk-activate',
 					'action2'       => - 1,
-					'message'       => esc_html__( 'Activating', 'auxin-elements' ),
+					'message'       => esc_html__( 'Activating', 'serpwars' ),
 				);
 				break;
 			}
@@ -114,7 +114,7 @@
 					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
 					'action'        => 'tgmpa-bulk-update',
 					'action2'       => - 1,
-					'message'       => esc_html__( 'Updating', 'auxin-elements' ),
+					'message'       => esc_html__( 'Updating', 'serpwars' ),
 				);
 				break;
 			}
@@ -129,7 +129,7 @@
 					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
 					'action'        => 'tgmpa-bulk-install',
 					'action2'       => - 1,
-					'message'       => esc_html__( 'Installing', 'auxin-elements' ),
+					'message'       => esc_html__( 'Installing', 'serpwars' ),
 				);
 				break;
 			}
@@ -140,7 +140,7 @@
 			wp_send_json_success( $request );
 		}
 
-        wp_send_json_success( array( 'message' => esc_html__( 'Activated', 'auxin-elements' ) ) );
+        wp_send_json_success( array( 'message' => esc_html__( 'Activated', 'serpwars' ) ) );
 
 		}
 		function box_plugins() {
