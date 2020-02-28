@@ -6,6 +6,8 @@
 		public $config;
 		public $current_tab = '';
 		public $url         = '';
+		protected $tgmpa_menu_slug 	= 'tgmpa-install-plugins';
+		protected $tgmpa_url 		= 'themes.php?page=tgmpa-install-plugins';
 
 		public $plugins;
 		protected $tgmpa_instance;
@@ -48,8 +50,8 @@
 		if($hook=="toplevel_page_serpwars"){		
 		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
 		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
-		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.2d08656d.js" , array(), "1.0.0", true );
-		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.a90e43d7.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.6089e68e.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.249330ea.js" , array(), "1.0.0", true );
 
 		wp_localize_script( 'serpwars-custom-theme-app', 'serpwars_setup_params', array(
             'tgm_plugin_nonce' => array(
@@ -87,6 +89,59 @@
         	$request = array();
         	// send back some json we use to hit up TGM
         	$plugins = $this->get_plugins();
+        	foreach ( $plugins['activate'] as $slug => $plugin ) {
+			if ( $_POST['slug'] == $slug ) {
+				$request = array(
+					'url'           => admin_url( $this->tgmpa_url ),
+					'plugin'        => array( $slug ),
+					'tgmpa-page'    => $this->tgmpa_menu_slug,
+					'plugin_status' => 'all',
+					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
+					'action'        => 'tgmpa-bulk-activate',
+					'action2'       => - 1,
+					'message'       => esc_html__( 'Activating', 'auxin-elements' ),
+				);
+				break;
+			}
+		}
+		foreach ( $plugins['update'] as $slug => $plugin ) {
+			if ( $_POST['slug'] == $slug ) {
+				$request = array(
+					'url'           => admin_url( $this->tgmpa_url ),
+					'plugin'        => array( $slug ),
+					'tgmpa-page'    => $this->tgmpa_menu_slug,
+					'plugin_status' => 'all',
+					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
+					'action'        => 'tgmpa-bulk-update',
+					'action2'       => - 1,
+					'message'       => esc_html__( 'Updating', 'auxin-elements' ),
+				);
+				break;
+			}
+		}
+		foreach ( $plugins['install'] as $slug => $plugin ) {
+			if ( $_POST['slug'] == $slug ) {
+				$request = array(
+					'url'           => admin_url( $this->tgmpa_url ),
+					'plugin'        => array( $slug ),
+					'tgmpa-page'    => $this->tgmpa_menu_slug,
+					'plugin_status' => 'all',
+					'_wpnonce'      => wp_create_nonce( 'bulk-plugins' ),
+					'action'        => 'tgmpa-bulk-install',
+					'action2'       => - 1,
+					'message'       => esc_html__( 'Installing', 'auxin-elements' ),
+				);
+				break;
+			}
+		}
+
+		if ( ! empty( $request ) ) {
+			$request['hash'] = md5( serialize( $request ) ); // used for checking if duplicates happen, move to next plugin
+			wp_send_json_success( $request );
+		}
+
+        wp_send_json_success( array( 'message' => esc_html__( 'Activated', 'auxin-elements' ) ) );
+
 		}
 		function box_plugins() {
 

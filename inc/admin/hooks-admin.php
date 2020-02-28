@@ -11,19 +11,16 @@
         	array(
             	'name'      => __('Elementor', 'serpwars'),
             	'slug'      => 'elementor',
-            	'required'  => false,
             	'categories'=> array('serpwars', 'essential')
         	),
         	array(
             	'name'      => __('Custom Post Type', 'serpwars'),
             	'slug'      => 'custom-post-type-ui',
             	'required'  => false,
-            	'categories'=> array('serpwars', 'essential')
         	),
         	array(
             	'name'      => __('Advance Custom Fields', 'serpwars'),
             	'slug'      => 'advanced-custom-fields',
-            	'required'  => false,
             	'categories'=> array('serpwars', 'essential')
         	),
         	array(
