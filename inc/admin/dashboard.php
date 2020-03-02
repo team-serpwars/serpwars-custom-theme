@@ -32,6 +32,9 @@
 				add_action( 'admin_notices', array( self::$_instance, 'admin_notice' ) );
 				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 				add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
+				
+				
+
 
 			
 
@@ -79,7 +82,10 @@
 
 		}
 
-		
+
+
+	
+
 		
 		public function ajax_plugins() {
 			// Inputs validations
@@ -103,7 +109,7 @@
 				);
 				break;
 			}
-		}
+			}
 		foreach ( $plugins['update'] as $slug => $plugin ) {
 			if ( $_POST['slug'] == $slug ) {
 				$request = array(

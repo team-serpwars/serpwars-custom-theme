@@ -33,6 +33,8 @@
 
             add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
             add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
+
+            // add_action( 'wp_ajax_nopriv_serpwars_import_menus'  , array($this, 'import_menus' ) );
     	}
 
     	 public function load_options() {
@@ -93,8 +95,6 @@
 
     	 }
 
-        public function import_acf_options2() {
-        }
         public function import_acf_options() {
             $data    = $this->get_demo_data();
             $theme_options = get_option("serpwars_theme_options");
@@ -165,10 +165,16 @@
 
             update_option("serpwars_theme_options","" );
             update_option("serpwars_theme_options",$theme_options );
+
+
+
             wp_send_json_success($theme_options);
         }
         public function import_templates() {
             $data    = $this->get_demo_data();
+
+            $this->import_menus($data);
+
             if(isset($data['elementor_templates'])){             
                 wp_send_json_success( $data['elementor_templates']) ;
             }
@@ -183,11 +189,122 @@
              // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
 
             $template = json_decode( $data, true );
+           
 
             $this->import_elementor_post($name,$index,$template);
 
+
             }       
         }
+
+        public function import_menus($data){
+            $data = $data["menu"];
+            $this->get_menus($data);            
+        }
+
+        public function get_menus( array $args ) {
+
+
+            
+            foreach ($args as $menu_name => $menu_data) {
+                $menu_exists = wp_get_nav_menu_object( $menu_name );
+
+                if(! $menu_exists){ //toggle this
+                $menu_id = wp_create_nav_menu($menu_name);
+                // $menu_id = 6;
+                    if( is_wp_error( $menu_id ) ) continue;
+
+                    foreach ($menu_data['items'] as $item_key => $item_value) {
+                        $meta_data = $item_value['menu-meta'];
+                        $old_item_ID = $item_value['menu-item-current-id'];
+
+                        unset( $item_value['menu-meta']             );
+                        unset( $item_value['menu-item-current-id']  );
+                        unset( $item_value['menu-item-attr-title']  );
+                        unset( $item_value['menu-item-classes']     );
+                        unset( $item_value['menu-item-description'] );
+                        if( strpos( $item_value['menu-item-url'], '{{demo_home_url}}' ) !== false ) {
+                                $item_value['menu-item-url'] = esc_url( str_replace( "{{demo_home_url}}", get_site_url(), $item_value['menu-item-url'] ) );
+                        }
+                        $item_value['menu-item-object-id'] = 0;
+
+                        
+                        $item_id = wp_update_nav_menu_item( $menu_id, 0, $item_value );
+                        $post_id = $this->get_meta_post_id( '_menu_item_object_id', strval( $menu_data['id'] ) );
+
+                        update_post_meta( $post_id, '_menu_item_object_id', $menu_id );
+
+
+                        if ( is_wp_error( $item_id ) ) {
+                            continue;
+                        }
+                         //Add 'meta-data' options for menu items
+                    foreach ($meta_data as $meta_key => $meta_value) {
+
+                        switch ( $meta_key ) {
+                            case '_menu_item_object_id':
+                                // Change exporter's object ID value
+                                switch ( $item_value['menu-item-type'] ) {
+                                    case 'post_type':
+                                    case 'taxonomy':
+                                        $meta_value = $item_value['menu-item-object-id'];
+                                        break;
+                                }
+                                break;
+
+                            case '_menu_item_menu_item_parent':
+                                if( (int) $meta_value != 0 ) {
+                                    $meta_value     = auxin_get_transient( 'auxin_menu_item_old_parent_id_' . $meta_value );
+                                }
+                                break;
+                            case '_menu_item_url':
+                                // if( ! empty( $meta_value ) ) {
+                                    $meta_value     = $item_value['menu-item-url'];
+                                // }
+                                break;
+                        }
+
+                        update_post_meta( $item_id, $meta_key, $meta_value );
+
+                    }
+                    // wp_send_json_success("Menu ".$menu_name." Created");
+                }
+                # code...
+
+                if( is_array( $menu_data['location'] ) ) {
+                    // Putting up menu locations on theme_mods_phlox
+                    $locations = get_theme_mod( 'nav_menu_locations' );
+                    foreach ( $menu_data['location'] as $location_id => $location_name ) {
+                        $locations[$location_name] = $menu_id;
+                    }
+                    set_theme_mod( 'nav_menu_locations', $locations );
+                }
+            }
+        }
+
+
+        }
+
+            public function get_meta_post_id( $key, $value ) {
+
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key=%s AND meta_value=%s", $key, $value );
+
+        $meta = $wpdb->get_results( $sql );
+
+        if ( is_array($meta) && !empty($meta) && isset($meta[0]) ) {
+            $meta   =   $meta[0];
+        }
+
+        if ( is_object( $meta ) ) {
+            return $meta->post_id;
+        } else {
+            return 0;
+        }
+
+        }
+
         public function import_step() {
             $data    = $this->get_demo_data();
 

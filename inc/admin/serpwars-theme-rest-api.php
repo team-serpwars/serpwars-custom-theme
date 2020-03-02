@@ -55,6 +55,9 @@
             add_action( 'wp_ajax_serpwars_check_cpt_exists'	, array(  $this, 'check_cpt_exists'));
 
 
+            
+
+
 
             if ( class_exists( 'TGM_Plugin_Activation' ) && isset( $GLOBALS['tgmpa'] ) ) {
 				add_action( 'init'					, array( $this, 'get_tgmpa_instanse' ), 30 );
@@ -146,6 +149,9 @@
 
 			die();
 		}
+
+
+
 		public function set_tgmpa_url() {
 			$this->tgmpa_menu_slug 	= ( property_exists( $this->tgmpa_instance, 'menu' ) ) ? $this->tgmpa_instance->menu : $this->tgmpa_menu_slug;
 			$this->tgmpa_menu_slug 	= apply_filters( $this->theme_id . '_theme_setup_wizard_tgmpa_menu_slug', $this->tgmpa_menu_slug );
@@ -224,6 +230,8 @@
 
 
 		}
+
+		
 		public function get_tgmpa_instanse() {
 			$this->tgmpa_instance 	= call_user_func( array( get_class( $GLOBALS['tgmpa'] ), 'get_instance' ) );
 
