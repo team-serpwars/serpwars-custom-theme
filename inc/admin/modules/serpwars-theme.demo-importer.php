@@ -34,7 +34,7 @@
             add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
             add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
 
-            // add_action( 'wp_ajax_nopriv_serpwars_import_menus'  , array($this, 'import_menus' ) );
+            add_action( 'wp_ajax_nopriv_serpwars_import_front_page'  , array($this, 'import_front_page' ) );
     	}
 
     	 public function load_options() {
@@ -170,10 +170,72 @@
 
             wp_send_json_success($theme_options);
         }
+        public function import_front_page(){
+            $data    = $this->get_demo_data();
+            $theme_options = get_option("serpwars_theme_options");
+
+            if(!isset($theme_options["front_page"]) || !get_post($theme_options["front_page"])){               
+
+                if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/'.$data["front_page"]["url"]) ) ) {
+                    $data = json_decode( $data, true );
+                    $uploads_dir = wp_upload_dir();
+                
+
+                    if( strpos( $data["content"], '{{demo_uploads_url}}' ) !== false ) {
+                        $data["content"] = str_replace( "{{demo_uploads_url}}", $uploads_dir["url"], $data["content"]) ;
+                    }
+
+
+                    $args = array(
+                        'post_title'    => wp_strip_all_tags( $data["title"] ),
+                        'post_status'   => 'publish',
+                        'post_type'   => 'page',
+                        'post_content'   => $data["content"],
+                    );
+
+
+                     $post_id = wp_insert_post( $args );
+
+                      if(!is_wp_error($post_id)){
+                        $theme_options["front_page"] = $post_id;
+                    // $json_content = json_decode( $data , true );
+                    update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+                    update_post_meta( $post_id, '_elementor_data',$data["meta"]["_elementor_data"]);
+                    update_post_meta( $post_id, '_elementor_page_settings',unserialize($data["meta"]["_elementor_page_settings"]));
+                    update_post_meta( $post_id, '_elementor_controls_usage',unserialize($data["meta"]["_elementor_controls_usage"]));
+                    update_post_meta( $post_id, '_elementor_css',unserialize($data["meta"]["_elementor_css"]));
+                    update_post_meta( $post_id, '_elementor_version', '2.9.3' );
+                    update_post_meta( $post_id, '_elementor_pro_version', '2.8.3' );
+                    update_post_meta( $post_id, '_edit_lock', '1583351696:1' );
+    
+                    //     if( ! empty( $page_template ) ){
+                            update_post_meta( $post_id, '_wp_page_template', 'elementor_canvas' );
+                    //     }
+    
+                    //     if( $post_type === 'elementor_library' ) {
+                            update_post_meta( $post_id, '_elementor_template_type', "wp-page" );
+                    //     }               
+    
+    
+                        update_option("serpwars_theme_options","" );
+                        update_option("serpwars_theme_options",$theme_options );
+                        update_option("page_on_front",$post_id);
+
+    
+    
+                    }else{
+                    }
+
+
+                }
+            }
+
+        }
         public function import_templates() {
             $data    = $this->get_demo_data();
 
             $this->import_menus($data);
+            $this->import_front_page();
 
             if(isset($data['elementor_templates'])){             
                 wp_send_json_success( $data['elementor_templates']) ;
