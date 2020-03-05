@@ -25,7 +25,10 @@
             add_action( 'wp_ajax_serpwars_import_step'           , array( $this, 'import_step') );
             add_action( 'wp_ajax_nopriv_serpwars_import_step'           , array( $this, 'import_step') );
 
+            add_action( 'wp_ajax_serpwars_import_options'           , array( $this, 'import_options') );
             add_action( 'wp_ajax_nopriv_serpwars_import_options'           , array( $this, 'import_options') );
+
+            add_action( 'wp_ajax_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
             add_action( 'wp_ajax_nopriv_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
 
             add_action( 'wp_ajax_serpwars_import_templates'           , array( $this, 'import_templates') );
@@ -34,7 +37,8 @@
             add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
             add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
 
-            add_action( 'wp_ajax_nopriv_serpwars_import_front_page'  , array($this, 'import_front_page' ) );
+            add_action( 'wp_ajax_nopriv_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
+            add_action( 'wp_ajax_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
     	}
 
     	 public function load_options() {
@@ -170,6 +174,72 @@
 
             wp_send_json_success($theme_options);
         }
+        public function uninstall_features(){
+            $theme_options = get_option("serpwars_theme_options");
+            $data    = $this->get_demo_data();
+            $cpts = array();
+            $new_plugin = array();
+            $new_active_plugin = array();
+            $plugins = $data["plugins"];
+            $current_cpts =  get_option('cptui_post_types');
+            $active_plugins =  get_option('active_plugins');
+
+
+            foreach($active_plugins as $plugin){
+                array_push($new_active_plugin,explode("/",$plugin)[0]);
+            }
+
+            foreach ($new_active_plugin as $index => $plugin) {
+                if(!in_array($plugin, $plugins)){
+                    array_push($new_plugin, $active_plugins[$index]);
+                }
+            }
+
+            update_option('active_plugins',$new_plugin);
+
+            foreach($data["menu"] as $menu_name => $menu){
+                $menu_exists = wp_get_nav_menu_object( $menu_name );
+                if($menu_exists){
+                    wp_delete_nav_menu($menu_name);
+                }
+            }
+            foreach($data["cptui"] as $name=>$cpt){
+                array_push($cpts,$name);
+            }
+
+
+            if(!empty($theme_options)){
+                $new_cpt = array();
+                foreach ($theme_options['elementor_templates'] as $template) {
+                    if(get_post($template->id)){
+                        wp_delete_post( $template->id, true );
+                    }                    # code...
+                }
+
+                foreach ($theme_options['acf'] as $acf) {
+                    if(get_post($acf->id)){
+                        wp_delete_post( $acf->id, true );
+                    }                    # code...
+                }
+
+            foreach($current_cpts as $name=>$cpt){
+                if(!in_array($name, $cpts)){
+                    $new_cpt[$name]= $cpt;
+                }
+            }
+            update_option('cptui_post_types',$new_cpt,true);
+
+
+                if(get_post($theme_options['front_page'])){
+                   wp_delete_post($theme_options['front_page'], true );
+                   update_option("page_on_front",0,true);
+                } 
+            }
+
+            delete_option( "serpwars_theme_options" );
+            wp_send_json_success("Features Were Uninstalled");
+
+        }
         public function import_front_page(){
             $data    = $this->get_demo_data();
             $theme_options = get_option("serpwars_theme_options");
@@ -269,7 +339,7 @@
 
             
             foreach ($args as $menu_name => $menu_data) {
-                $menu_exists = wp_get_nav_menu_object( $menu_name );
+               
 
                 if(! $menu_exists){ //toggle this
                 $menu_id = wp_create_nav_menu($menu_name);

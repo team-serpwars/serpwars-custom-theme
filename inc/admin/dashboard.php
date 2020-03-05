@@ -33,9 +33,7 @@
 				add_action( 'wp_ajax_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 				add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array(  Serpwars_Theme_API::get_instance(), 'ajax_plugins' ) );
 				
-				
-
-
+	
 			
 
 				// add_action( 'admin_init', array( self::$_instance, 'admin_init' ) );
@@ -54,7 +52,7 @@
 		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
 		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
 		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.6089e68e.js" , array(), "1.0.0", true );
-		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.c8d6554c.js" , array(), "1.0.0", true );
+		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.36d371e9.js" , array(), "1.0.0", true );
 
 		wp_localize_script( 'serpwars-custom-theme-app', 'serpwars_setup_params', array(
             'tgm_plugin_nonce' => array(
@@ -84,7 +82,7 @@
 
 
 
-	
+		
 
 		
 		public function ajax_plugins() {

@@ -42,6 +42,8 @@
             add_action( 'wp_ajax_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
             add_action( 'wp_ajax_nopriv_serpwars_setup_plugins'	, array( $this, 'ajax_plugins' ) );
 
+            
+
             add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
             add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
 
@@ -165,6 +167,8 @@
 			return true;;
 			// return is_admin() || current_user_can( 'install_themes' );
 		}
+
+
 		public function ajax_plugins() {
 			$request = array();
 			$plugins = $this->get_plugins();
