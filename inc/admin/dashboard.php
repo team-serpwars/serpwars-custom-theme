@@ -564,7 +564,7 @@
 		function admin_notice() {
 		global $pagenow;
 		if ( is_admin() && ( 'themes.php' == $pagenow ) && isset( $_GET['activated'] ) ) {
-			serpwars_maybe_change_header_version();
+			// serpwars_maybe_change_header_version();
 			?>
 		<div class="serpwars-notice-wrapper notice is-dismissible">
 			<div class="serpwars-notice">
