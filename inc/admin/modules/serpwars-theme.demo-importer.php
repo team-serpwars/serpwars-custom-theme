@@ -243,7 +243,7 @@
             // update_option("serpwars_theme_options",$theme_options );
 
             // }
-            // $this->import_options();
+            $this->import_options();
             wp_send_json_success($theme_options);
         }
         public function import_options() {
