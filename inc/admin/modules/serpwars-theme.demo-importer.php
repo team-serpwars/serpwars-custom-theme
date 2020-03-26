@@ -103,31 +103,44 @@
             $data    = $this->get_demo_data();
             $theme_options = get_option("serpwars_theme_options");
 
-            if(isset($data['acf'])){
-                $ids = array();
-                foreach($data['acf'] as $index => $acf){
-                    if($theme_options["acf"][$index]->id == 0 || !get_post($theme_options["acf"][$index]->id)){ //Item has id of 0 or if it does not really exist at all
-                       if(function_exists ('acf_get_field_group_post')){                
-                        $post = acf_get_field_group_post( $acf['key'] );
-                        if( $post ) {
-                            $acf['ID'] = $post->ID;
-                            $theme_options["acf"][$index] = (object) array(
-                                "id"=> $post->ID,
-                                "title"=> $post->post_title,
-                                "found"=> true
-                            );
-                        }
-                        $field_group['ID'] = $post->ID;
-                        $acf = acf_import_field_group( $acf );
-                        $ids[] = $acf['ID'];
-                        $total = count($ids);
-                        $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
+            $json  = $data['acf'];
 
-                       }else{
 
-                        $field_group = acf_get_local_field_group( $acf  );
+            if( isset($json['key']) ) {            
+                $json = array( $json );             
+            }
 
-                        // attempt get id
+            $ids = array();
+            $keys = array();
+            $imported = array();
+
+            foreach( $json as $field_group ) {
+                $keys[] = $field_group['key'];
+            }
+            foreach( $keys as $key ) {
+            // attempt find ID
+            $field_group = _acf_get_field_group_by_key( $key );
+            // bail early if no field group
+            if( !$field_group ) continue;           
+            // append
+            $ids[ $key ] = $field_group['ID'];            
+            }
+
+            acf_enable_local();
+            acf_reset_local();
+
+            foreach( $json as $field_group ) {            
+            // add field group
+            acf_add_local_field_group( $field_group );            
+            }
+
+            foreach( $keys as $key ) {
+            
+            // vars
+            $field_group = acf_get_local_field_group( $key );
+            
+            
+            // attempt get id
             $id = acf_maybe_get( $ids, $key );
             
             if( $id ) {
@@ -147,24 +160,90 @@
             
             // import
             $field_group = acf_import_field_group( $field_group );
-           
+            
+            
+            // append message
+            $imported[] = array(
+                'ID'        => $field_group['ID'],
+                'title'     => $field_group['title'],
+                'updated'   => $id ? 1 : 0
+            );
 
+        }
 
-                       }                                                                
-                    }
+                foreach($imported as $index => $field_group){
 
-            $theme_options["acf"][$index]->ID = $field_group["ID"];           
-            $theme_options["acf"][$index]->title = $acf["title"];           
-            $theme_options["acf"][$index]->found = true;           
-                
+                    $theme_options["acf"][$index]->id = $field_group['ID'];           
+                    $theme_options["acf"][$index]->title = $field_group['title'];           
+                    $theme_options["acf"][$index]->found = true;   
                 }
+        
+            // if(isset($data['acf'])){
+            //     $ids = array();
+            //     foreach($data['acf'] as $index => $acf){
+            //         if($theme_options["acf"][$index]->id == 0 || !get_post($theme_options["acf"][$index]->id)){ //Item has id of 0 or if it does not really exist at all
+            //            if(function_exists ('acf_get_field_group_post')){                
+            //             $post = acf_get_field_group_post( $acf['key'] );
+            //             if( $post ) {
+            //                 $acf['ID'] = $post->ID;
+            //                 $theme_options["acf"][$index] = (object) array(
+            //                     "id"=> $post->ID,
+            //                     "title"=> $post->post_title,
+            //                     "found"=> true
+            //                 );
+            //             }
+            //             $field_group['ID'] = $post->ID;
+            //             $acf = acf_import_field_group( $acf );
+            //             $ids[] = $acf['ID'];
+            //             $total = count($ids);
+            //             $text = sprintf( _n( 'Imported 1 field group', 'Imported %s field groups', $total, 'acf' ), $total );   
+
+            //            }else{
+
+            //             $field_group = acf_get_local_field_group( $acf  );
+
+            //             // attempt get id
+            // $id = acf_maybe_get( $ids, $key );
+            
+            // if( $id ) {
+                
+            //     $field_group['ID'] = $id;
+                
+            // }
+            
+            
+            // // append fields
+            // if( acf_have_local_fields($key) ) {
+                
+            //     $field_group['fields'] = acf_get_local_fields( $key );
+                
+            // }
+            
+            
+            // // import
+            // $field_group = acf_import_field_group( $field_group );
+
+           
+            // $res = wp_update_post($field_group["ID"] ,array(
+            //     'post_title'=>$acf["title"]
+            // ));
+            // wp_send_json_success(array($field_group, $res ,$field_group["ID"],$field_group->ID));
 
 
-            update_option("serpwars_theme_options","" );
-            update_option("serpwars_theme_options",$theme_options );
 
-            }
-            $this->import_options();
+            //            }                                                                
+            //         }
+
+                   
+                
+            //     }
+
+
+            // update_option("serpwars_theme_options","" );
+            // update_option("serpwars_theme_options",$theme_options );
+
+            // }
+            // $this->import_options();
             wp_send_json_success($theme_options);
         }
         public function import_options() {
