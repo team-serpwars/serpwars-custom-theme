@@ -1,10 +1,10 @@
 <?php
-	if ( ! defined('ABSPATH') )  exit;
+    if ( ! defined('ABSPATH') )  exit;
 
-	class Serpwars_Demo_Importer {
-		protected static $instance = null;
+    class Serpwars_Demo_Importer {
+        protected static $instance = null;
 
-		public static function get_instance() {
+        public static function get_instance() {
 
         // If the single instance hasn't been set, set it now.
         if ( null == self::$instance ) {
@@ -12,12 +12,12 @@
         }
 
         return self::$instance;
-    	}
+        }
 
 
-    	 function __construct() {
-    	    add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
-    	    add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
+         function __construct() {
+            add_action( 'wp_ajax_serpwars_demo_data'       , array( $this, 'import') );
+            add_action( 'wp_ajax_nopriv_serpwars_demo_data'       , array( $this, 'import') );
 
             add_action( 'wp_ajax_nopriv_serpwars_load_options'           , array( $this, 'load_options') );
             add_action( 'wp_ajax_serpwars_load_options'           , array( $this, 'load_options') );
@@ -39,9 +39,9 @@
 
             add_action( 'wp_ajax_nopriv_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
             add_action( 'wp_ajax_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
-    	}
+        }
 
-    	 public function load_options() {
+         public function load_options() {
 
             $theme_options = get_option("serpwars_theme_options") ? get_option("serpwars_theme_options") : array();
 
@@ -85,19 +85,19 @@
 
          }
          public function import() {
-    	 	//
+            //
 
-    	 	$data = json_decode( $this->parse( 'https://localhost/custom-site/wp-content/uploads/json/sample-data.json', 'insert', 'post' ), true );
-
-
-
-        	if ( $data['success'] ) {
-    	 		die();
-        	    wp_send_json_success();
-        	}
+            $data = json_decode( $this->parse( 'https://localhost/custom-site/wp-content/uploads/json/sample-data.json', 'insert', 'post' ), true );
 
 
-    	 }
+
+            if ( $data['success'] ) {
+                die();
+                wp_send_json_success();
+            }
+
+
+         }
 
         public function import_acf_options() {
             $data    = $this->get_demo_data();
@@ -169,6 +169,7 @@
                 'updated'   => $id ? 1 : 0
             );
 
+
         }
 
                 foreach($imported as $index => $field_group){
@@ -177,6 +178,7 @@
                     $theme_options["acf"][$index]->title = $field_group['title'];           
                     $theme_options["acf"][$index]->found = true;   
                 }
+
         
             // if(isset($data['acf'])){
             //     $ids = array();
@@ -237,13 +239,38 @@
                    
                 
             //     }
+           if(isset($data['cptui'])){
+                $cptdata = get_option( 'cptui_post_types', false );
+                $cptdata = ($cptdata) ? $cptdata : array();
+                $cpt = array();
+                $acf_local = array();
+
+                    // print_r($cptdata[$item['name']]['name']);
+                foreach ($data['cptui'] as $i=>$item) {
+                    // Check if item exist
+                    if(!isset($cptdata[$item['name']])){
+                        $cptdata[$item['name']] = $item;                    
+                    }
+                    array_push($cpt,(object) array(
+                        "slug" => $item['name'],
+                        "title" => $item['label'],
+                        "found" => true,
+                    ));
+
+                }
+
+                update_option('cptui_post_types',$cptdata,true);
+                $theme_options["cptui"] = $cpt;
 
 
-            // update_option("serpwars_theme_options","" );
-            // update_option("serpwars_theme_options",$theme_options );
+            }
+
+
+            update_option("serpwars_theme_options","" );
+            update_option("serpwars_theme_options",$theme_options );
 
             // }
-            $this->import_options();
+            // $this->import_options();
             wp_send_json_success($theme_options);
         }
         public function import_options() {
@@ -661,7 +688,7 @@
 
     }
 
-    	 public function parse( $url, $action = 'insert', $method = 'get' ) {
+         public function parse( $url, $action = 'insert', $method = 'get' ) {
 
         //Get JSON
 
@@ -699,9 +726,9 @@
 
         //     // Increase the CURL timeout if required
         //     if( ! empty( $requst['errors']['http_request_failed'][0] ) ){
-	       //  	if( false !== strpos( $requst['errors']['http_request_failed'][0], 'cURL error 28') ){
-	       //      	set_theme_mod('increasing_curl_timeout_is_required', 15);
-	       //      }
+           //   if( false !== strpos( $requst['errors']['http_request_failed'][0], 'cURL error 28') ){
+           //       set_theme_mod('increasing_curl_timeout_is_required', 15);
+           //      }
         //     }
 
         //     wp_send_json_error( array( 'message' => $request->get_error_message() ) );
@@ -724,5 +751,5 @@
 
 
 
-	}
+    }
 ?>
