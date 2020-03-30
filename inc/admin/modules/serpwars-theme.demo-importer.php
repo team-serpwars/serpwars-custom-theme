@@ -31,6 +31,8 @@
             add_action( 'wp_ajax_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
             add_action( 'wp_ajax_nopriv_serpwars_import_acf_options'           , array( $this, 'import_acf_options') );
 
+            add_action( 'wp_ajax_serpwars_check_template_exists'           , array( $this, 'check_template_exists') );
+
             add_action( 'wp_ajax_serpwars_import_templates'           , array( $this, 'import_templates') );
             add_action( 'wp_ajax_nopriv_serpwars_import_templates'           , array( $this, 'import_templates') );
 
@@ -95,6 +97,33 @@
                 die();
                 wp_send_json_success();
             }
+
+
+         }
+
+         public function check_template_exists(){
+            $id = sanitize_text_field($_POST['id']);
+            $theme_options = get_option("serpwars_theme_options");
+          
+               foreach ($theme_options['elementor_templates'] as $index=>$template) {
+                    if($template->id == $id){
+                        if(!get_post($id)){
+                            $template->found= false;
+                            $theme_options['elementor_templates']->found=$template->found;
+                        }else{
+                            $template->found = true;
+                            $theme_options['elementor_templates']->found=$template->found;
+                        }
+                    }
+               }             
+            
+            update_option("serpwars_theme_options",$theme_options );
+
+             foreach ($theme_options['elementor_templates'] as $template) {
+                    if($template->id == $id){
+                        wp_send_json_success($template);
+                    }
+               }
 
 
          }
@@ -458,7 +487,8 @@
              // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
 
             $template = json_decode( $data, true );
-           
+            
+
 
             $this->import_elementor_post($name,$index,$template);
 
@@ -601,9 +631,15 @@
                 $template_title = $template["title"];
                 $item_index = -1;
 
-                // foreach ($theme_options["elementor_templates"] as $index=>$item) {
-                $item = $theme_options["elementor_templates"][$index];
-                    if($name == $item->name && !get_post($item->id)){
+                foreach ($theme_options["elementor_templates"] as $index=>$template) {
+                        if($name == $theme_options["elementor_templates"][$index]->name){
+                            $item = $theme_options["elementor_templates"][$index];        
+            
+
+
+                // $item = $theme_options["elementor_templates"][$index];
+
+                if($name == $item->name && !get_post($item->id)){
                          extract($template);
 
                 $sanitize_key    = sanitize_key(  $page_template  );
@@ -660,7 +696,8 @@
                 // }
                
 
-                // print_r($post_id);
+                            }
+                }
             }
 
    
