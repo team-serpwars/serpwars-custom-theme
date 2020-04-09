@@ -1,8 +1,11 @@
 <?php
     if ( ! defined('ABSPATH') )  exit;
 
+    require_once("elementor_uploader.php");
+
     class Serpwars_Demo_Importer {
         protected static $instance = null;
+        private $elementor_uploader;
 
         public static function get_instance() {
 
@@ -39,9 +42,34 @@
             add_action( 'wp_ajax_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
             add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates'           , array( $this, 'import_template') );
 
+            add_action( 'wp_ajax_nopriv_serpwars_import_elementor_templates_test'           , array( $this, 'import_template_test') );
+
             add_action( 'wp_ajax_nopriv_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
             add_action( 'wp_ajax_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
+
+
+
+            add_action( 'wp_ajax_nopriv_elementor_library_direct_actions', [ $this, 'handle_direct_actions' ] );
+            
+            if(class_exists('ElementorUploader')){
+                $this->elementor_uploader = new ElementorUploader();
+            }
         }
+
+        public function handle_direct_actions(){
+            $action = $_REQUEST['library_action'];
+
+            $data = json_decode( file_get_contents( $file_name ), true );
+
+            
+            $result = $this->$action($_REQUEST);
+        }
+
+        
+
+        /**----------------------------**/
+
+
 
          public function load_options() {
 
@@ -477,23 +505,55 @@
                 wp_send_json_success( $data['elementor_templates']) ;
             }
         }
+        public function import_template_test() {
+            $url = sanitize_text_field($_POST['url']);
+            if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/'.$url ) ) ) {
+             // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
+
+            $template = json_decode( $data, true );
+            wp_send_json_success($template );
+
+        }
+        }
         public function import_template() {
 
             $url = sanitize_text_field($_POST['url']);
             $name = sanitize_text_field($_POST['name']);
             $index = sanitize_text_field($_POST['index']);
 
-             if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/'.$url ) ) ) {
-             // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
+            $theme_options = get_option("serpwars_theme_options");
 
-            $template = json_decode( $data, true );
+            if($this->elementor_uploader){
+                $template = $this->elementor_uploader->import_single_template('https://serpwars-theme-templates.herokuapp.com/'.$url );
+
+                foreach ($theme_options["elementor_templates"] as $index=>$template) {
+                    if($name == $theme_options["elementor_templates"][$index]->name){
+                         $item = $theme_options["elementor_templates"][$index]; 
+
+                        $theme_options["elementor_templates"][$index]->id =  $template->template_id;
+                        update_option("serpwars_theme_options","" );
+                        update_option("serpwars_theme_options",$theme_options );
+        
+                        wp_send_json_success(array(
+                            "option"=>$theme_options,
+                            "post_id"=>$template->template_id,
+                            "stuff"=>$theme_options["elementor_templates"][$index]->id
+                        ));
+                    }
+                }        
+            }
+
+            //  if( false !== ( $data = @file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/'.$url ) ) ) {
+            //  // if( false !== ( $data = @file_get_contents( $this->get_theme_dir() . 'json/'.$url ) ) ) {
+
+            // $template = json_decode( $data, true );
             
 
 
-            $this->import_elementor_post($name,$index,$template);
+            // $this->import_elementor_post($name,$index,$template);
 
 
-            }       
+  
         }
 
         public function import_menus($data){
