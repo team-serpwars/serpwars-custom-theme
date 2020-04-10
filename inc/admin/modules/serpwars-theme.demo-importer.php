@@ -48,6 +48,8 @@
             add_action( 'wp_ajax_serpwars_uninstall_features'  , array($this, 'uninstall_features' ) );
 
 
+            add_action( 'wp_ajax_nopriv_serpwars_create_frontpage'  , array($this, 'create_frontpage' ) );
+            add_action( 'wp_ajax_serpwars_create_frontpage'  , array($this, 'create_frontpage' ) );
 
             add_action( 'wp_ajax_nopriv_elementor_library_direct_actions', [ $this, 'handle_direct_actions' ] );
             
@@ -56,6 +58,73 @@
             }
         }
 
+        public function create_frontpage(){
+            $frontpage_data = array();
+            $theme_options = get_option("serpwars_theme_options") ? get_option("serpwars_theme_options") : array();
+            $template_list = $theme_options["elementor_templates"]; 
+
+            $sample_data = json_decode(file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/sample-demo.json' ) );
+            $frontpage_template = json_decode(file_get_contents( 'https://serpwars-theme-templates.herokuapp.com/p_frontend.json' ) );
+
+            $sample_templates =  $sample_data->data->elementor_templates;
+
+            $frontpage_template = $this->process_frontend_template($sample_templates,$template_list,$frontpage_template);
+            //
+
+            $args = array(
+                        'post_title'    => "SERPWARS Homepage Template",
+                        'post_status'   => 'publish',
+                        'post_type'   => 'page',
+                        'post_content'   => "",
+                    );
+
+            $post_id = wp_insert_post( $args );
+
+            update_post_meta( $post_id, '_wp_page_template', 'elementor_canvas' );
+            update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+            update_post_meta( $post_id, '_elementor_template_type', 'wp-page' );
+            update_post_meta( $post_id, '_elementor_version', '2.9.7' );
+            update_post_meta( $post_id, '_elementor_data', json_encode($frontpage_template ));
+
+
+            $theme_options["front_page"] = $post_id;
+            update_option("serpwars_theme_options",$theme_options );
+            update_option("page_on_front",$post_id);
+           
+            wp_send_json_success(home_url()."/?p=".$post_id);
+        }
+
+        public function process_frontend_template($sample_templates,$template_list,$frontpage_template){
+            foreach ($sample_templates as $template_item) {
+                $frontpage_data[$template_item->name] = array();
+                if($template_item->_element_id){
+                    $frontpage_data[$template_item->name]['_element_id'] = $template_item->_element_id;
+                }
+            }
+
+            foreach ($template_list as $template_item) {
+                $frontpage_data[$template_item->name]['id'] = $template_item->id; 
+            }
+
+            foreach($frontpage_template as $item){
+                if($item->settings->_element_id){                    
+                    $template_id = $this->extract_frontpage_data($frontpage_data,$item->settings->_element_id);
+
+                    $item->elements[0]->elements[0]->settings->template_id = ($template_id) ? $template_id : $item->elements[0]->elements[0]->settings->template_id ;
+                }
+            }
+
+            return $frontpage_template;
+
+        }
+
+        public function extract_frontpage_data($collection,$field){
+            foreach($collection as $item){                              
+                if($item['_element_id'] == $field){
+                    return $item['id'];                 
+                }
+            }   
+        }
         public function handle_direct_actions(){
             $action = $_REQUEST['library_action'];
 
@@ -499,7 +568,7 @@
             $data    = $this->get_demo_data();
 
             $this->import_menus($data);
-            $this->import_front_page();
+            // $this->import_front_page();
 
             if(isset($data['elementor_templates'])){             
                 wp_send_json_success( $data['elementor_templates']) ;
