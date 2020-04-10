@@ -190,8 +190,8 @@
 			public function get_item( $template_id ) {
 				$post = get_post( $template_id );
 
-				$user = get_user_by( 'id', 1 );
-				// $user = get_user_by( 'id', $post->post_author );
+
+				$user = get_user_by( 'id', $post->post_author );
 
 				$page = SettingsManager::get_settings_managers( 'page' )->get_model( $template_id );
 
@@ -414,16 +414,19 @@
 	
 
 			public function elementor_template_import(){
-				$path = $_REQUEST['path'];
-				$import_result = $this->import_single_template($path);
+				 $uploads_dir = wp_upload_dir();
 
-				wp_send_json_success( $import_result );
-				if ( is_wp_error( $import_result ) ) {
-					return $import_result;
-				}
 
-				$items[] = $import_result;
-				return $items;
+				// $path = $_REQUEST['path'];
+				// $import_result = $this->import_single_template($path);
+
+				// wp_send_json_success( $import_result );
+				// if ( is_wp_error( $import_result ) ) {
+				// 	return $import_result;
+				// }
+
+				// $items[] = $import_result;
+				// return $items;
 
 			}
 			public function import_single_template($path){

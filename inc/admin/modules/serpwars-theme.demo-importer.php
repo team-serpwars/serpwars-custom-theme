@@ -5,7 +5,7 @@
 
     class Serpwars_Demo_Importer {
         protected static $instance = null;
-        private $elementor_uploader;
+        public $elementor_uploader;
 
         public static function get_instance() {
 
@@ -522,21 +522,27 @@
             $index = sanitize_text_field($_POST['index']);
 
             $theme_options = get_option("serpwars_theme_options");
+            if(class_exists('ElementorUploader')){
+                $elementor_uploader = new ElementorUploader();
+            }
 
-            if($this->elementor_uploader){
-                $template = $this->elementor_uploader->import_single_template('https://serpwars-theme-templates.herokuapp.com/'.$url );
+            if($elementor_uploader){
+                $template_doc = $elementor_uploader->import_single_template('https://serpwars-theme-templates.herokuapp.com/'.$url );
 
                 foreach ($theme_options["elementor_templates"] as $index=>$template) {
                     if($name == $theme_options["elementor_templates"][$index]->name){
                          $item = $theme_options["elementor_templates"][$index]; 
 
-                        $theme_options["elementor_templates"][$index]->id =  $template->template_id;
+                        $theme_options["elementor_templates"][$index]->id =  $template_doc['template_id'];
                         update_option("serpwars_theme_options","" );
                         update_option("serpwars_theme_options",$theme_options );
+
+
         
                         wp_send_json_success(array(
                             "option"=>$theme_options,
-                            "post_id"=>$template->template_id,
+                            "template"=>$template_doc,
+                            "post_id"=>$template_doc['template_id'],
                             "stuff"=>$theme_options["elementor_templates"][$index]->id
                         ));
                     }
