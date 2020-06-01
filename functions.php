@@ -94,23 +94,28 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 		$min_suffix          = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		if ( apply_filters( 'hello_elementor_enqueue_style', $enqueue_basic_style ) ) {
+			wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
+	
 			wp_enqueue_style(
 				'hello-elementor',
 				get_template_directory_uri() . '/style' . $min_suffix . '.css',
 				[],
 				HELLO_ELEMENTOR_VERSION
 			);
-			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],HELLO_ELEMENTOR_VERSION);
+			
+			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
 		}
 
 		if ( apply_filters( 'hello_elementor_enqueue_theme_style', true ) ) {
+			wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
+	
 			wp_enqueue_style(
 				'hello-elementor-theme-style',
 				get_template_directory_uri() . '/theme' . $min_suffix . '.css',
 				[],
 				HELLO_ELEMENTOR_VERSION
 			);
-			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],HELLO_ELEMENTOR_VERSION);
+			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
 		}
 	}
 }
