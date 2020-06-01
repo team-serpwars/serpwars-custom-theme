@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'HELLO_ELEMENTOR_VERSION', '2.2.0' );
+require_once get_template_directory().'/inc/theme-customizer.php';
 
 if ( ! isset( $content_width ) ) {
 	$content_width = 800; // Pixels.
