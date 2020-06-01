@@ -1,0 +1,61 @@
+.page-banner{
+    font-family: "Raleway", Sans-serif;
+    color:#fff;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding:40px;
+    text-align:center;
+    min-height:70vh;
+    position:relative;
+}
+.page-banner .background-overlay{
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: #000000;
+    opacity: 0.65;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+.page-banner .col-wrap{
+    padding:0 15%;
+}
+.page-banner .col-wrap>.widget-wrap{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-content: start;
+}
+.page-banner .container{
+    position:relative;
+} 
+.page-banner .widget-heading{
+    width:100%;
+}   
+.page-banner h1{        
+    font-size: 3.5vw;
+    font-weight: 900;
+}
+.page-banner .excerpt{
+    padding:10px 0 45px;
+}
+.page-banner h2{
+    font-size: 1.75vw;
+    font-weight: 400;
+    line-height: 1.5em;       
+}
+.page-banner .widget-button{
+    width:100%;
+}
+.page-banner .button.lg{
+    font-size: 3vw;
+    font-weight: 900;
+    fill: #ffffff;
+    color: #ffffff;
+    background-color: #df1c22;
+    border-radius: 5px 5px 5px 5px;
+    padding: 45px 75px 45px 75px;
+    text-transform:uppercase;
+}
