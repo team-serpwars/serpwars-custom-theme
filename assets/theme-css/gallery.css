@@ -1,0 +1,18 @@
+section.gallery-title{
+    background-color: #df1c22;
+    padding:10px;
+}
+section.gallery-title .heading-title{
+    font-size: 4vw;
+    font-weight: 900;
+    color: #fff;
+}
+div.gallery figure.gallery-item{
+    max-width: 24.75%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 100%;
+    margin: -2px -2px -4px;
+    padding: 0;
+}

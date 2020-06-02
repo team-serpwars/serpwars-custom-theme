@@ -2,10 +2,7 @@
     $loaded = get_field('why_choose_us_listings');
     $items = set_two_columns($loaded);
 ?>
-<style>
-
-</style>
-<section class="section-full-width how-it-works">
+<section class="section-full-width why-choose-us">
     <div class="container">
         <div class="row">
             <div class="col col-100">

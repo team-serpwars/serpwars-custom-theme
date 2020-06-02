@@ -1,3 +1,12 @@
+section.why-choose-us{
+    background-color: #df1c22;
+    padding:10px;
+}
+section.why-choose-us .heading-title {
+    font-size: 4vw;
+    font-weight: 900;
+    color: #fff;
+}
 section.why-choose-us-listings .cta-bg-wrapper{
     min-width: 40%;
     min-height: 30vh;

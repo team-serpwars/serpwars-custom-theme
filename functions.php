@@ -120,6 +120,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 			wp_enqueue_style('hello-page-blurbs',get_template_directory_uri() . '/assets/theme-css/blurbs.css',[],microtime());
 			wp_enqueue_style('hello-page-how-it-works-steps',get_template_directory_uri() . '/assets/theme-css/how-it-works-steps.css',[],microtime());
 			wp_enqueue_style('hello-page-why-choose-us',get_template_directory_uri() . '/assets/theme-css/why-choose-us-listings.css',[],microtime());
+			wp_enqueue_style('hello-page-gallery',get_template_directory_uri() . '/assets/theme-css/gallery.css',[],microtime());
 		
 		}
 	}
