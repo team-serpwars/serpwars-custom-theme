@@ -14,6 +14,7 @@ while ( have_posts() ) : the_post();
 get_template_part( 'template-parts/custom-field-parts/page-banner' );
 get_template_part( 'template-parts/custom-field-parts/blurbs' );
 get_template_part( 'template-parts/custom-field-parts/how-it-works' );
+get_template_part( 'template-parts/custom-field-parts/why-choose-us' );
 	?>
 
 

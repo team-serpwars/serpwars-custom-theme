@@ -103,10 +103,8 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 				HELLO_ELEMENTOR_VERSION
 			);
 			//
-			
-			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
-			wp_enqueue_style('hello-page-blurbs',get_template_directory_uri() . '/assets/theme-css/blurbs.css',[],microtime());
-			wp_enqueue_style('hello-page-how-it-works-steps',get_template_directory_uri() . '/assets/theme-css/how-it-works-steps.css',[],microtime());
+		
+		
 		}
 
 		if ( apply_filters( 'hello_elementor_enqueue_theme_style', true ) ) {
@@ -121,6 +119,8 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
 			wp_enqueue_style('hello-page-blurbs',get_template_directory_uri() . '/assets/theme-css/blurbs.css',[],microtime());
 			wp_enqueue_style('hello-page-how-it-works-steps',get_template_directory_uri() . '/assets/theme-css/how-it-works-steps.css',[],microtime());
+			wp_enqueue_style('hello-page-why-choose-us',get_template_directory_uri() . '/assets/theme-css/why-choose-us-listings.css',[],microtime());
+		
 		}
 	}
 }
@@ -276,5 +276,20 @@ function pageBanner($args = NULL) {
     </div>
 </section>
 <?php }
+function set_two_columns($loaded){
+	$items = array();
+    $max_items = ceil(count($loaded)/2);
+    $current_index = 0;
 
+    for($i=0;$i<$max_items;$i+=1){
+        $items[$i] = array();
+    }
+    for($i=0;$i<count($loaded);$i+=1){
+        if(count($items[$current_index]) == 2){
+            $current_index+=1;
+        }
+        array_push($items[$current_index],$loaded[$i]);
+	}
+	return $items ;
+}
  SW_Theme_Custom();

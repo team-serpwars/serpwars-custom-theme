@@ -1,0 +1,41 @@
+section.why-choose-us-listings .cta-bg-wrapper{
+    min-width: 40%;
+    min-height: 30vh;
+    background-size: cover;
+    background-position: 50%;
+    z-index: 1;
+}
+.cta-layout-image-left .widget-container{
+    margin: 0% 1% 0% 0%;
+    padding: 0px 0px 0px 0px;
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 8px 8px 8px 8px;
+    border-color: #efefef;
+    border-radius: 5px 5px 5px 5px;
+}
+.cta-layout-image-left .cta-blurb{
+    display: flex;
+    position:relative;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+.cta-layout-image-left .cta-blurb .cta-title{
+    font-size: 2.5vw;
+    font-weight: 900;
+    line-height: 1em;
+    color: #333333;
+    margin-bottom:15px;
+}
+.cta-layout-image-left .cta-blurb .cta-description{
+    font-size: 1.5vw;
+    line-height: 1.25em;
+    color: #666666;
+    min-height: 75px;
+}
+.cta-layout-image-left .cta-blurb .cta-content{
+    min-height: 30vh;
+    text-align: left;
+    padding: 3% 3% 3% 3%;
+    background-color: #ffffff;
+}
