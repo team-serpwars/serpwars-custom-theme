@@ -1,0 +1,29 @@
+section.how-it-works{
+    background-color: #df1c22;
+    padding:10px;
+}
+section.how-it-works .heading-title{
+    font-size: 4vw;
+    font-weight: 900;
+    color: #fff;
+}
+section.how-it-works-steps .step {
+    font-size: 1.25vw;
+    font-weight: 700;
+    color: #df1c22;
+}
+
+section.how-it-works-steps .cta-title{
+    padding:0px 20px 0px 20px;
+    font-size: 2vw;
+    font-weight: 900;
+    line-height: 1em;
+    color: #333333;
+}
+section.how-it-works-steps .cta-description{
+    font-family: "Roboto", Sans-serif;
+    font-size: 1.25vw;
+    font-weight: 300;
+    color: #7a7a7a;
+    padding: 0px 20px 20px 20px;
+}
