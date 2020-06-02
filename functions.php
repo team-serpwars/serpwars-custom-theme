@@ -124,6 +124,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 
 			wp_enqueue_style('hello-page-heading-banner',get_template_directory_uri() . '/assets/theme-css/page-heading-banner.css',[],microtime());
 			wp_enqueue_style('hello-blurb-image',get_template_directory_uri() . '/assets/theme-css/blurb-image.css',[],microtime());
+			wp_enqueue_style('hello-simple-listing',get_template_directory_uri() . '/assets/theme-css/simple-listing.css',[],microtime());
 		
 		}
 	}
