@@ -1,5 +1,5 @@
-<?php $args['photo'] = get_field('page_banner_background_image');?>
-<section class="section-full-width page-banner" style="background-image: url(<?php echo $args['photo']; ?>);">
+<?php $photo = get_field('page_banner_background_image');?>
+<section class="section-full-width page-banner" style="background-image: url(<?php echo  $photo['url']; ?>);">
     <div class="background-overlay"></div>
     <div class="container">
         <div class="row">
