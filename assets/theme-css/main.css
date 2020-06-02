@@ -1,0 +1,13 @@
+.section-full-width .row{
+    width:100%;
+    display:flex;
+}
+.col{
+    padding: 10px;
+    min-height: 20vw;
+    display:flex;
+    position:relative;
+}
+.col-25{
+    width:25%;    
+}

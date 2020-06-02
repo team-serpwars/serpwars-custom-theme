@@ -94,8 +94,8 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 		$min_suffix          = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		if ( apply_filters( 'hello_elementor_enqueue_style', $enqueue_basic_style ) ) {
-			wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
-	
+			wp_enqueue_style( 'serpwars-custom-theme-vendor', "//kit-pro.fontawesome.com/releases/latest/css/pro.min.css" , array(),"5.13.0", 'all');
+			wp_enqueue_style('hello-page-main-style',get_template_directory_uri() . '/assets/theme-css/main.css',[],microtime());
 			wp_enqueue_style(
 				'hello-elementor',
 				get_template_directory_uri() . '/style' . $min_suffix . '.css',
@@ -103,12 +103,14 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 				HELLO_ELEMENTOR_VERSION
 			);
 			
+			
 			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
+			wp_enqueue_style('hello-page-main-style',get_template_directory_uri() . '/assets/theme-css/blurbs.css',[],microtime());
 		}
 
 		if ( apply_filters( 'hello_elementor_enqueue_theme_style', true ) ) {
-			wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
-	
+			wp_enqueue_style( 'serpwars-custom-theme-vendor',"//kit-pro.fontawesome.com/releases/latest/css/pro.min.css" , array(),"5.13.0", 'all');
+			wp_enqueue_style('hello-page-main-style',get_template_directory_uri() . '/assets/theme-css/main.css',[],microtime());
 			wp_enqueue_style(
 				'hello-elementor-theme-style',
 				get_template_directory_uri() . '/theme' . $min_suffix . '.css',
@@ -116,6 +118,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 				HELLO_ELEMENTOR_VERSION
 			);
 			wp_enqueue_style('hello-page-banner-style',get_template_directory_uri() . '/assets/theme-css/page-banner.css',[],microtime());
+			wp_enqueue_style('hello-page-main-style',get_template_directory_uri() . '/assets/theme-css/blurbs.css',[],microtime());
 		}
 	}
 }
@@ -240,27 +243,30 @@ function pageBanner($args = NULL) {
 	}
   
 	?>
-<section style="background-image: url(<?php echo $args['photo']; ?>);">
+<section class="section-full-width page-banner" style="background-image: url(<?php echo $args['photo']; ?>);">
+    <div class="background-overlay"></div>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-100">
+                <div class="col-wrap">                
                 <div class="widget-wrap">
                     <div class="widget-heading">
                         <div class="widget-container">
                             <h1 class="heading-title">WE BUY FIRE DAMAGED HOUSES</h1>
                         </div>
                     </div>
-                    <div class="widget-heading">
+                    <div class="widget-heading excerpt">
                         <div class="widget-container">
-                            <h1 class="heading-title">We Buy Fire Damaged Houses Pays Cash for Fire Damaged Property Across the USA. Ready to Sell Your Fire Damaged Home? Get Started Below.</h1>
+                            <h2 class="heading-title">We Buy Fire Damaged Houses Pays Cash for Fire Damaged Property Across the USA. Ready to Sell Your Fire Damaged Home? Get Started Below.</h2>
                         </div>
                     </div>
                     <div class="widget-button">
                         <div class="widget-container">
                             <div class="button-wrapper">
-                                <a href="#" class="button">Get My Cash Offer</a>
+                                <a href="#" class="button lg">Get My Cash Offer</a>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

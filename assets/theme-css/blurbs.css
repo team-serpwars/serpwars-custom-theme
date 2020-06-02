@@ -1,0 +1,22 @@
+.blurb-section .icon{
+    color: #df1c22;
+    border-color: #df1c22;
+    font-size: 75px;
+}
+.blurb-section .cta-content-item{
+    text-align: center;
+    font-size: 2vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #333333;
+    font-size:27px;
+}
+.blurb-section .col{
+    border: 3px solid #efefef;
+    margin:10px 5px 10px 0px;
+}
+.blurb-section .cta-content .cta-icon{
+    margin-bottom: 15px;
+    width: 100%;
+    text-align:center;
+}
