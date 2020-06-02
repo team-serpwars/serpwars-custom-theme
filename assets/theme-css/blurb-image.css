@@ -1,0 +1,18 @@
+.blurb-image .blog-info{
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-wrap:wrap;
+}
+.blurb-image h1.heading-title{
+    color: #df1c22;
+    font-size: 3.2vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1em;
+}
+.blurb-image p{
+    color: #7a7a7a;
+    font-size: 1.5vw;
+    font-weight: 300;
+}

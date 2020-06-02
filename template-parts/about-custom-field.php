@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 while ( have_posts() ) : the_post();
 get_template_part( 'template-parts/custom-field-parts/page-heading-banner' );
+get_template_part( 'template-parts/custom-field-parts/blurb-image-right' );
 
 //get_template_part( 'template-parts/custom-field-parts/what-we-do' ); // on hold requires select dropdown to select from all posts  pages and post types
 //get_template_part( 'template-parts/custom-field-parts/image-blurbs' ); // on hold requires select dropdown to select from all posts  pages and post types
