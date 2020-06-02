@@ -1,0 +1,23 @@
+section.page-heading{
+    background-color: #df1c22;
+    color:#fff;
+}
+section.page-heading .col-wrap{
+    margin: 20px 0px 10px 0px;
+    padding: 2% 2% 2% 2%;
+}
+section.page-heading h1{
+    font-size: 6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1em;
+}
+section.page-heading .sub-heading{
+    margin: 0px 0px 0px 0px;
+    padding: 10px 0px 20px 0px;
+}
+section.page-heading h2{
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.5em;
+}

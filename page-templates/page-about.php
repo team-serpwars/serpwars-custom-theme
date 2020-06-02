@@ -1,5 +1,5 @@
 <?php
-/* Template Name: Hompage Template 1*/
+/* Template Name: About Us Template 1*/
 /**
  * The site's entry point.
  *
@@ -16,6 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 $is_elementor_theme_exist = function_exists( 'elementor_theme_do_location' );
-get_template_part( 'template-parts/home-custom-field' );
+get_template_part( 'template-parts/about-custom-field' );
 
 get_footer();
