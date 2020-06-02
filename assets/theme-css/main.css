@@ -13,6 +13,15 @@
 .col-33{
     width:33.33%;    
 }
+.col-66{
+    width:66%;    
+}
 .col-50{
     width:50%;    
+}
+.p0{
+    padding:0;
+}
+.p1{
+    padding:10px;
 }

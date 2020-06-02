@@ -18,6 +18,7 @@ get_template_part( 'template-parts/custom-field-parts/why-choose-us' );
 //get_template_part( 'template-parts/custom-field-parts/what-we-do' ); // on hold requires select dropdown to select from all posts  pages and post types
 //get_template_part( 'template-parts/custom-field-parts/image-blurbs' ); // on hold requires select dropdown to select from all posts  pages and post types
 get_template_part( 'template-parts/custom-field-parts/gallery' );
+get_template_part( 'template-parts/custom-field-parts/testimonial' );
 	?>
 
 
