@@ -46,11 +46,11 @@
 
 		}
 		 function scripts($hook){
-			wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
-	
+
 
 		if($hook=="toplevel_page_serpwars"){		
-			wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
+		wp_enqueue_style( 'serpwars-custom-theme-vendor', get_template_directory_uri()."/assets/css/chunk-vendors.708f6df1.css" , array(),"1.0.0", 'all');
+		wp_enqueue_style( 'serpwars-custom-theme-app', get_template_directory_uri()."/assets/css/app.352b09dd.css" );
 		wp_enqueue_script( "serpwars-custom-theme-vendor",  get_template_directory_uri()."/assets/js/chunk-vendors.6089e68e.js" , array(), "1.0.0", true );
 		wp_enqueue_script( "serpwars-custom-theme-app",  get_template_directory_uri()."/assets/js/app.a5c6f4d6.js" , array(), "1.0.0", true );
 

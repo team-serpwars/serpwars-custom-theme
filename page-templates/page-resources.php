@@ -20,19 +20,7 @@ get_template_part( 'template-parts/custom-field-parts/page-heading-banner' );
 
 $items = get_field('resource_files');
 ?>
-<style>
-    section.resource-section .listing-content{
-        font-size: 2vw;
-        font-weight: 300;
-        color: #7a7a7a;
-    }
-    section.resouce-section h3.heading-title{
-        font-size: 3vw;
-        font-weight: 900;
-        text-transform: uppercase;
-        color: #df1c22;
-    }
-</style>
+
 <section class="section-full-width  simple-listing resource-section p1">
     <div class="container">
         <div class="row">

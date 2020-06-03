@@ -1,0 +1,11 @@
+section.resource-section .listing-content{
+    font-size: 2vw;
+    font-weight: 300;
+    color: #7a7a7a;
+}
+section.resouce-section h3.heading-title{
+    font-size: 3vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #df1c22;
+}

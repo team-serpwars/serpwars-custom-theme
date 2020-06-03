@@ -24,13 +24,14 @@ get_template_part( 'template-parts/custom-field-parts/simple-listing' );
 																	/*
 																	Services
 About Us
-Contact Us
-FAQ
-Resources
-Blog
-Special Promotions
-Reviews
-Pricing
+Contact Us 	//Shortcode For Google map
+FAQ 		// Accordion
+Resources // on hold requires select dropdown to select from all posts  pages and post types // contact form 7
+																	
+Blog // Pagination is broken
+Special Promotions // Not found
+Reviews //
+Pricing // not found
 Locations
 																	*/
 // get_template_part( 'template-parts/custom-field-parts/gallery' );

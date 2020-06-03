@@ -17,6 +17,9 @@ function theme_customizer($wp_customize){
         'sanitize_callback' => 'esc_attr'
     ));
 
+    
+    
+
     $wp_customize->add_control('ctrl_header_contact_label',array(
         'label'=> 'Contact Label',
         'description' => 'Type your Contact Label',
