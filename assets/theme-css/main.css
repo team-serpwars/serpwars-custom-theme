@@ -32,7 +32,15 @@
 .p1{
     padding:10px;
 }
-
+.p4{
+    padding:40px;
+}
+.pb1_2{
+    padding-bottom:5px;
+}
+.border-3{
+    border: solid 3px #efefef;
+}
 .left_column_section{
     padding: 20px 40px 20px 40px;
     border-top: solid 3px #efefef;
