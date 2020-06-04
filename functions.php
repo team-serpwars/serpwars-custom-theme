@@ -128,6 +128,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 			wp_enqueue_style('hello-resources',get_template_directory_uri() . '/assets/theme-css/resources.css',[],microtime());
 			wp_enqueue_style('hello-testimonial',get_template_directory_uri() . '/assets/theme-css/testimonial.css',[],microtime());
 			wp_enqueue_style('hello-image-grids',get_template_directory_uri() . '/assets/theme-css/image-grids.css',[],microtime());
+			wp_enqueue_style('hello-contact-us',get_template_directory_uri() . '/assets/theme-css/contact-us.css',[],microtime());
 		
 		}
 	}

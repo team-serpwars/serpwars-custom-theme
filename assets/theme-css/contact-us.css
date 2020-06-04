@@ -1,0 +1,98 @@
+section.contact-us .contact-info {
+    padding:0;
+}
+section.contact-us .contact-info .col-wrap{
+    background-color: #861114;
+    margin: 0px 0px 0px 0   5px;
+    padding: 60px 40px 0px 40px;
+    color:#fff;
+}
+section.contact-us .contact-info h4.heading-title{
+    font-size: 4vw;
+    letter-spacing: 1.5px;
+    font-weight: 900;
+}
+section.contact-us .contact-info .widget-text p{
+    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 300;
+    line-height: 1.25em;
+}
+section.contact-us a.social-icon{
+    background-color: rgba(223,28,34,0);
+    font-size: 40px;
+    padding: 0em;
+    margin-right: 20px;
+    color:#fff;
+}
+section.contact-us .widget-box .widget-container{
+    margin: 0% 0% 0% 0%;
+    padding: 20px 0px 10px 0px;
+    border-radius: 0px 0px 0px 0px;
+}
+section.contact-us .widget-icon-box-wrapper{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    text-align:left;
+}
+section.contact-us .widget-box-icon{
+    margin-right:15px;
+}
+section.contact-us .widget-box-icon a{
+    fill: #ffffff;
+    color: #ffffff;
+    border-color: #ffffff;
+    font-size:50px;
+}
+section.contact-us  .widget-box-title{
+    color: #ffffff;
+    font-size: 2vw;
+    font-weight: bold;
+    line-height: 1em;
+}
+section.contact-us .widget-box-description{
+    color: #ffffff;
+    font-size: 0.75em;
+    font-weight: 400;
+}
+.wpcf7-form h2 {
+    color: #df1c22!important;
+    text-align: left;
+    font-size: 4vw;
+    font-weight: 900;
+    line-height: 1em;
+}
+.wpcf7-form h5 {
+    text-align: left;
+    font-size: 30px !important;
+    font-weight: 500;
+    line-height: normal;
+    color: #333333;
+}
+.wpcf7-form label, .wpcf7-form input, .wpcf7-form select {
+    width: 100% !important;
+    min-width: 100% !important;
+    display: block;
+    color: #333333;
+    font-size: 26px !important;
+    font-weight:700;
+}
+.wpcf7-form input, .wpcf7-form select {
+    font-size: 22px;
+    padding: 15px 10px;
+    border: 3px solid #efefef;
+    width: 100% !important;
+    min-width: 100% !important;
+    background-color: #efefef;
+    color: #666666;
+}
+.wpcf7-form .eb-submit-btn {
+    padding: 20px 10px;
+    font-weight: 800;
+    border-radius: 5px;
+    color: #ffffff!important;
+    background-color: #df1c22!important;
+    font-size: 4vw;
+    margin-bottom: 40px;
+}
