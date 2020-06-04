@@ -1,0 +1,15 @@
+.testimonial .elementor-text-editor{
+    font-size: 28px;
+    font-weight: 500;
+    color: #333333;
+}
+.testimonial .fa.fa-quote-left,
+.testimonial .fa.fa-quote-right{
+    color: #df1c22;
+}
+.testimonial  .left_column_section{
+    padding: 20px 40px 20px 40px;
+    border-top: solid 3px #efefef;
+    border-left: solid 3px #efefef;
+    border-bottom: solid 3px #efefef;
+}

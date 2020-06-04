@@ -125,6 +125,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 			wp_enqueue_style('hello-blurb-image',get_template_directory_uri() . '/assets/theme-css/blurb-image.css',[],microtime());
 			wp_enqueue_style('hello-simple-listing',get_template_directory_uri() . '/assets/theme-css/simple-listing.css',[],microtime());
 			wp_enqueue_style('hello-resources',get_template_directory_uri() . '/assets/theme-css/resources.css',[],microtime());
+			wp_enqueue_style('hello-testimonial',get_template_directory_uri() . '/assets/theme-css/testimonial.css',[],microtime());
 		
 		}
 	}
