@@ -1,0 +1,59 @@
+section.what-we-do{
+    background-color: #df1c22;
+    padding:10px;
+}
+section.what-we-do .heading-title {
+    font-size: 4vw;
+    font-weight: 900;
+    color: #fff;
+}
+section.what-we-do-listing-item .blurb-bg-wrapper{
+    min-width: 45%;
+    min-height: 40vh;
+    position:relative;
+}
+section.what-we-do-listing-item .blurb-bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: 50%;
+    z-index: 1;        
+}
+section.what-we-do-listing-item .blurb-content{
+    min-height: 60vh;
+    text-align: left;
+    padding: 2% 4% 2% 4%;
+    background-color: #ffffff;
+}
+section.what-we-do-listing-item .blurb-title{
+    font-size: 4vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1em;
+    color: #333333;
+    margin-bottom:10px;
+}
+section.what-we-do-listing-item .blurb-description{
+    font-size: 1.75vw;
+    line-height: 1.5em;
+    color: #7a7a7a;
+    margin-bottom:20px;
+}   
+section.what-we-do-listing-item button{
+    font-size: 2.25vw;
+    font-weight: 500;
+    letter-spacing: 2.4px;
+    color: #df1c22;
+    border-width: 0px;
+    text-transform:uppercase;
+    border-radius: 5px;
+} 
+section.what-we-do-listing-item a.blurb{
+    position:relative;
+    display:flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}

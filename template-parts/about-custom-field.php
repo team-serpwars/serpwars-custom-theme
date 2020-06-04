@@ -15,7 +15,7 @@ get_template_part( 'template-parts/custom-field-parts/page-heading-banner' );
 get_template_part( 'template-parts/custom-field-parts/blurb-image-right' );
 get_template_part( 'template-parts/custom-field-parts/simple-listing' );
 
-//get_template_part( 'template-parts/custom-field-parts/what-we-do' ); // on hold requires select dropdown to select from all posts  pages and post types
+get_template_part( 'template-parts/custom-field-parts/what-we-do' ); // on hold requires select dropdown to select from all posts  pages and post types
 //get_template_part( 'template-parts/custom-field-parts/image-blurbs' ); // on hold requires select dropdown to select from all posts  pages and post types
 //get_template_part( 'template-parts/custom-field-parts/2-step-form' ); // on hold requires select dropdown to select from all posts  pages and post types
 																		// do settings API to set social media and other contact details
