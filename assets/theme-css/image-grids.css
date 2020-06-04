@@ -1,0 +1,58 @@
+.image-grids:nth-child(1){
+    padding: 1% 1% 1% 1%;
+}
+.image-grids{
+    padding: 0% 1% 0.5% 1%;
+}
+.image-grids .blurb-content{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 230px;
+    text-align: left;
+    padding: 20px 20px 20px 20px;
+    color:#fff;
+    align-content: flex-end;
+    align-items: flex-end;
+}
+.image-grids .blurb-bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: 50%;
+}
+.image-grids .col{
+    padding: 0px;     
+}
+.image-grids .col-wrap{
+    margin: 0% 2% 0% 0%;
+    padding: 0px 0px 0px 0px;
+}
+.image-grids .widget-wrap{
+    margin: 0px 0px 0px 0px;
+    padding: 0% 0% 0% 0%;
+    background-color: #ffffff;
+    border-radius: 5px 5px 5px 5px;
+    overflow:hidden;
+}
+.image-grids .blurb-bg-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+}
+.image-grids .blurb-title{
+    font-size: 2.25vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+.image-grids a.blurb{
+    position:relative;
+    display: block;
+}

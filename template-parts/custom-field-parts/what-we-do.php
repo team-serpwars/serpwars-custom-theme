@@ -18,10 +18,6 @@
     }
     // $items = set_two_columns($loaded);
 ?>
-<style>
-
-
-</style>
 <section class="section-full-width what-we-do">
     <div class="container">
         <div class="row">

@@ -127,6 +127,7 @@ if ( ! function_exists( 'hello_elementor_scripts_styles' ) ) {
 			wp_enqueue_style('hello-simple-listing',get_template_directory_uri() . '/assets/theme-css/simple-listing.css',[],microtime());
 			wp_enqueue_style('hello-resources',get_template_directory_uri() . '/assets/theme-css/resources.css',[],microtime());
 			wp_enqueue_style('hello-testimonial',get_template_directory_uri() . '/assets/theme-css/testimonial.css',[],microtime());
+			wp_enqueue_style('hello-image-grids',get_template_directory_uri() . '/assets/theme-css/image-grids.css',[],microtime());
 		
 		}
 	}
@@ -293,6 +294,24 @@ function set_two_columns($loaded){
     }
     for($i=0;$i<count($loaded);$i+=1){
         if(count($items[$current_index]) == 2){
+            $current_index+=1;
+        }
+        array_push($items[$current_index],$loaded[$i]);
+	}
+	return $items ;
+}
+function set_items_per_row($loaded,$per_row=4){
+	$items = array();
+    $max_items = ceil(count($loaded)/$per_row);
+    $current_index = 0;
+
+    for($i=0;$i<$max_items;$i+=1){
+        $items[$i] = array();
+	}
+	
+	
+    for($i=0;$i<count($loaded);$i+=1){
+        if(count($items[$current_index]) == $per_row){
             $current_index+=1;
         }
         array_push($items[$current_index],$loaded[$i]);
