@@ -320,3 +320,5 @@ function set_items_per_row($loaded,$per_row=4){
 	return $items ;
 }
  SW_Theme_Custom();
+
+ require_once get_template_directory().'/includes/acf.php';
