@@ -322,3 +322,4 @@ function set_items_per_row($loaded,$per_row=4){
  SW_Theme_Custom();
 
  require_once get_template_directory().'/includes/acf.php';
+ require_once get_template_directory().'/includes/custom-post-types.php';
